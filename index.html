@@ -5,609 +5,761 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPH Summer Camp 2026 — Registration Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy:#0f1f3d; --navy2:#162847; --blue:#1d4ed8; --blue-l:#3b82f6;
-    --teal:#0d9488; --amber:#d97706; --rose:#e11d48; --violet:#7c3aed;
-    --green:#16a34a; --bg:#f0f4f8; --card:#fff; --border:#e2e8f0;
-    --text:#1e293b; --muted:#64748b; --r:12px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-  .header{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:0 28px;display:flex;align-items:center;justify-content:space-between;min-height:66px;border-bottom:1px solid rgba(255,255,255,.07);}
-  .hd-left{display:flex;align-items:center;gap:12px;}
-  .logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,var(--blue-l),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:14px;}
-  .hd-left h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px;}
-  .hd-left p{font-size:11.5px;color:rgba(255,255,255,.45);margin-top:1px;}
-  .badge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:3px 11px;font-size:10.5px;color:rgba(255,255,255,.55);font-weight:500;letter-spacing:.5px;}
-  .hd-right{display:flex;gap:8px;align-items:center;}
-  .live{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.45);}
-  .dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-  .btn{border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;border-radius:8px;padding:8px 16px;transition:all .18s;display:flex;align-items:center;gap:5px;}
-  .btn-pri{background:var(--blue-l);color:#fff;}
-  .btn-pri:hover{background:var(--blue);transform:translateY(-1px);}
-  .btn-sec{background:rgba(255,255,255,.09);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.14);}
-  .btn-sec:hover{background:rgba(255,255,255,.16);}
-  .main{max-width:1440px;margin:0 auto;padding:24px 22px;}
-  .tabs-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:20px;}
-  .lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
-  .tab-grp{display:flex;background:#fff;border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px;}
-  .tab{padding:6px 15px;border-radius:7px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;transition:all .17s;white-space:nowrap;font-family:'DM Sans',sans-serif;}
-  .tab.act{background:var(--navy);color:#fff;}
-  .tab:not(.act):hover{background:var(--bg);color:var(--text);}
-  .tog-grp{display:flex;background:#fff;border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px;}
-  .tog{padding:6px 13px;border-radius:7px;border:none;background:transparent;color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;transition:all .17s;font-family:'DM Sans',sans-serif;}
-  .tog.act{background:var(--teal);color:#fff;}
-  .sub-row{display:none;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:#fff;border:1px solid var(--border);border-radius:var(--r);border-left:4px solid var(--blue);}
-  .sub-row.on{display:flex;}
-  .stab{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .17s;white-space:nowrap;font-family:'DM Sans',sans-serif;}
-  .stab.act{color:#fff!important;border-color:transparent!important;}
-  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
-  @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}}
-  .card{border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;}
-  .card .cl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.72;}
-  .card .cv{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;margin:5px 0 2px;line-height:1;}
-  .card .cs{font-size:11.5px;opacity:.68;}
-  .card .ci{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:34px;opacity:.14;}
-  .c1{background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;}
-  .c2{background:linear-gradient(135deg,#b45309,#d97706);color:#fff;}
-  .c3{background:linear-gradient(135deg,#047857,#059669);color:#fff;}
-  .c4{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;}
-  .section{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:22px;margin-bottom:20px;}
-  .sec-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
-  .sec-title{font-family:'Syne',sans-serif;font-size:14.5px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px;}
-  .sec-title::before{content:'';width:4px;height:17px;background:var(--blue);border-radius:2px;}
-  .chart-box{position:relative;height:330px;}
-  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;}
-  .leg-i{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);font-weight:500;}
-  .leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-  .tbl-scroll{overflow-x:auto;margin-top:14px;}
-  table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}
-  thead th{background:var(--navy);color:#fff;padding:8px 11px;text-align:center;font-weight:600;font-size:10.5px;letter-spacing:.3px;}
-  thead th:first-child{text-align:left;position:sticky;left:0;z-index:2;min-width:220px;}
-  tbody tr:nth-child(even){background:#f8fafc;}
-  tbody tr:hover{background:#eff6ff;}
-  tbody td{padding:7px 11px;text-align:center;border-bottom:1px solid #f1f5f9;color:var(--text);}
-  tbody td:first-child{text-align:left;position:sticky;left:0;background:inherit;font-weight:500;z-index:1;}
-  .rt td{background:var(--navy)!important;color:#fff!important;font-weight:700;font-size:10px;letter-spacing:.6px;padding:6px 11px;}
-  .rs{background:#dbeafe!important;}
-  .rs td:first-child{color:var(--blue);font-weight:700;}
-  .rp td:first-child{color:#374151;padding-left:20px;}
-  .nd{color:#cbd5e1;font-style:italic;}
-  .bn{background:#dcfce7;color:#15803d;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-left:3px;}
-  .bd{background:#fee2e2;color:#b91c1c;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-left:3px;}
-  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-  .overlay.open{display:flex;}
-  .modal{background:#fff;border-radius:16px;width:92%;max-width:720px;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 25px 60px rgba(0,0,0,.3);}
-  .m-hd{background:var(--navy);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}
-  .m-hd h2{font-family:'Syne',sans-serif;color:#fff;font-size:15px;font-weight:800;}
-  .m-hd p{color:rgba(255,255,255,.45);font-size:11.5px;margin-top:2px;}
-  .m-x{background:rgba(255,255,255,.1);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
-  .m-body{padding:20px 22px;overflow-y:auto;flex:1;}
-  .m-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
-  .fg{display:flex;flex-direction:column;gap:4px;}
-  .fg label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
-  .fg input,.fg select{padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--text);transition:border-color .17s;}
-  .fg input:focus,.fg select:focus{border-color:var(--blue-l);}
-  .fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-  .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
-  .fsec{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;margin:16px 0 10px;padding-bottom:5px;border-bottom:2px solid var(--border);}
-  .bsave{background:var(--blue);color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
-  .bsave:hover{background:var(--navy);}
-  .bcancel{background:var(--bg);color:var(--muted);border:1px solid var(--border);padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
-  .tip{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;font-size:11px;color:#0369a1;margin-top:10px;}
+:root{
+  --navy:#0f1f3d;--navy2:#162847;--blue:#1d4ed8;--bl:#3b82f6;
+  --teal:#0d9488;--amber:#d97706;--rose:#e11d48;--violet:#7c3aed;
+  --green:#16a34a;--bg:#f0f4f8;--card:#fff;--brd:#e2e8f0;
+  --txt:#1e293b;--mut:#64748b;--r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:0 28px;display:flex;align-items:center;justify-content:space-between;min-height:66px;border-bottom:1px solid rgba(255,255,255,.07);}
+.hl{display:flex;align-items:center;gap:12px;}
+.logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,var(--bl),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:14px;}
+.hl h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px;}
+.hl p{font-size:11.5px;color:rgba(255,255,255,.45);margin-top:1px;}
+.badge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:3px 11px;font-size:10.5px;color:rgba(255,255,255,.55);font-weight:500;}
+.hr{display:flex;gap:8px;align-items:center;}
+.live{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.45);}
+.dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.btn{border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;border-radius:8px;padding:8px 16px;transition:all .18s;display:flex;align-items:center;gap:5px;}
+.bp{background:var(--bl);color:#fff;} .bp:hover{background:var(--blue);transform:translateY(-1px);}
+.bs{background:rgba(255,255,255,.09);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.14);}
+.bs:hover{background:rgba(255,255,255,.16);}
+
+/* LAYOUT */
+.main{max-width:1480px;margin:0 auto;padding:22px 20px;}
+
+/* TABS */
+.tr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:18px;}
+.lb{font-size:10.5px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;}
+.tg{display:flex;background:#fff;border:1px solid var(--brd);border-radius:10px;padding:3px;gap:2px;}
+.tab{padding:6px 14px;border-radius:7px;border:none;background:transparent;color:var(--mut);font-size:12.5px;font-weight:500;cursor:pointer;transition:all .17s;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+.tab.a{background:var(--navy);color:#fff;}
+.tab:not(.a):hover{background:var(--bg);color:var(--txt);}
+.tog{display:flex;background:#fff;border:1px solid var(--brd);border-radius:10px;padding:3px;gap:2px;}
+.tob{padding:6px 12px;border-radius:7px;border:none;background:transparent;color:var(--mut);font-size:12px;font-weight:500;cursor:pointer;transition:all .17s;font-family:'DM Sans',sans-serif;}
+.tob.a{background:var(--teal);color:#fff;}
+
+/* SUB TABS */
+.sr{display:none;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;padding:11px 15px;background:#fff;border:1px solid var(--brd);border-radius:var(--r);border-left:4px solid var(--blue);}
+.sr.on{display:flex;}
+.stab{padding:5px 13px;border-radius:20px;border:1.5px solid var(--brd);background:transparent;color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;transition:all .17s;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+.stab.a{color:#fff!important;border-color:transparent!important;}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}}
+.card{border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;}
+.card .cl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.72;}
+.card .cv{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;margin:6px 0 2px;line-height:1;}
+.card .cs{font-size:11.5px;opacity:.68;}
+.card .ci{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:36px;opacity:.13;}
+.c1{background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;}
+.c2{background:linear-gradient(135deg,#b45309,#d97706);color:#fff;}
+.c3{background:linear-gradient(135deg,#047857,#059669);color:#fff;}
+.c4{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;}
+
+/* SECTIONS */
+.sec{background:#fff;border-radius:var(--r);border:1px solid var(--brd);padding:22px;margin-bottom:20px;}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.st{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px;}
+.st::before{content:'';width:4px;height:17px;background:var(--blue);border-radius:2px;}
+.cb{position:relative;height:420px;}
+
+/* LEGEND */
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;}
+.li{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--mut);font-weight:500;}
+.ld{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+
+/* TABLE */
+.ts{overflow-x:auto;margin-top:14px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;white-space:nowrap;}
+thead th{background:var(--navy);color:#fff;padding:8px 10px;text-align:center;font-weight:600;font-size:10px;letter-spacing:.3px;}
+thead th:first-child{text-align:left;position:sticky;left:0;z-index:3;min-width:200px;}
+thead th.c25{background:#1e3a6e;}
+thead th.ctg{background:#0f5132;}
+thead th.clt{background:#1e3a6e;min-width:55px;}
+tbody tr:nth-child(even){background:#f8fafc;}
+tbody tr:hover{background:#eff6ff;}
+tbody td{padding:7px 10px;text-align:center;border-bottom:1px solid #f1f5f9;color:var(--txt);}
+tbody td:first-child{text-align:left;position:sticky;left:0;background:inherit;font-weight:500;z-index:1;}
+.rt td{background:var(--navy)!important;color:#fff!important;font-weight:700;font-size:10px;letter-spacing:.5px;padding:6px 10px;}
+.rs{background:#dbeafe!important;}
+.rs td:first-child{color:var(--blue);font-weight:700;}
+.rp td:first-child{padding-left:18px;color:#374151;}
+.nd{color:#cbd5e1;}
+.bn{background:#dcfce7;color:#15803d;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-left:2px;}
+.bd{background:#fee2e2;color:#b91c1c;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-left:2px;}
+td.y25{background:#f0f6ff;color:#1e3a6e;font-weight:600;}
+td.tgt{background:#f0fdf4;color:#0f5132;font-weight:600;}
+td.pct{font-weight:700;}
+td.pct.ok{color:var(--green);}
+td.pct.lo{color:var(--rose);}
+
+/* MODAL */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.ov.on{display:flex;}
+.mod{background:#fff;border-radius:16px;width:92%;max-width:740px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 25px 60px rgba(0,0,0,.3);}
+.mh{background:var(--navy);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}
+.mh h2{font-family:'Syne',sans-serif;color:#fff;font-size:15px;font-weight:800;}
+.mh p{color:rgba(255,255,255,.45);font-size:11.5px;margin-top:2px;}
+.mx{background:rgba(255,255,255,.1);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
+.mb{padding:20px 22px;overflow-y:auto;flex:1;}
+.mf{padding:14px 22px;border-top:1px solid var(--brd);display:flex;gap:8px;justify-content:flex-end;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+.fg label{font-size:10px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;}
+.fg input,.fg select{padding:8px 10px;border:1.5px solid var(--brd);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt);transition:border-color .17s;}
+.fg input:focus,.fg select:focus{border-color:var(--bl);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.fs{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;margin:16px 0 10px;padding-bottom:5px;border-bottom:2px solid var(--brd);}
+.bsv{background:var(--blue);color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.bsv:hover{background:var(--navy);}
+.bcn{background:var(--bg);color:var(--mut);border:1px solid var(--brd);padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.tip{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;font-size:11px;color:#0369a1;margin-top:10px;}
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="hd-left">
+<header class="hdr">
+  <div class="hl">
     <div class="logo">SP</div>
     <div><h1>SPH Summer Camp 2026</h1><p>Weekly Registration Monitor · LV Campus Focus</p></div>
   </div>
-  <div class="hd-right">
+  <div class="hr">
     <div class="live"><span class="dot"></span><span id="lbl-ts">Data loaded</span></div>
-    <span class="badge"></span>
-    <button class="btn btn-sec" onclick="exportCSV()">⬇ Export CSV</button>
-    <button class="btn btn-pri" onclick="openModal()">＋ Update Data</button>
+    <span class="badge">INTERNSHIP · CONFIDENTIAL</span>
+    <button class="btn bs" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn bp" onclick="openModal()">＋ Update Data</button>
   </div>
 </header>
 
 <main class="main">
 
   <!-- MAIN TABS -->
-  <div class="tabs-row">
-    <span class="lbl">View:</span>
-    <div class="tab-grp">
-      <button class="tab act" onclick="setView('total')" id="tab-total">Total Overview</button>
-      <button class="tab" onclick="setView('campus')" id="tab-campus">LV vs Campuses</button>
-      <button class="tab" onclick="setView('vs2025')" id="tab-vs2025">LV vs 2025</button>
-      <button class="tab" onclick="setView('program')" id="tab-program">By Program</button>
+  <div class="tr">
+    <span class="lb">View:</span>
+    <div class="tg">
+      <button class="tab a" onclick="setView('total')" id="vt">Total Overview</button>
+      <button class="tab" onclick="setView('campus')" id="vc">LV vs Campuses</button>
+      <button class="tab" onclick="setView('vs25')" id="vv">LV vs 2025</button>
+      <button class="tab" onclick="setView('prog')" id="vp">By Program</button>
     </div>
-    <span class="lbl" style="margin-left:10px">Show:</span>
-    <div class="tog-grp">
-      <button class="tog act" onclick="setMetric('cum')" id="tog-cum">Cumulative</button>
-      <button class="tog" onclick="setMetric('wk')" id="tog-wk">New / Week</button>
+    <span class="lb" style="margin-left:8px">Show:</span>
+    <div class="tog">
+      <button class="tob a" onclick="setMetric('cum')" id="mc">Cumulative</button>
+      <button class="tob" onclick="setMetric('wk')" id="mw">New / Week</button>
     </div>
   </div>
 
-  <!-- PROGRAM SUB-TABS -->
-  <div class="sub-row" id="subRow">
-    <span class="lbl" style="white-space:nowrap">Program:</span>
-    <div style="display:flex;gap:5px;flex-wrap:wrap" id="stabWrap">
-      <button class="stab act" onclick="setSub('all')" id="stab-all">All Programs</button>
-      <button class="stab" onclick="setSub('js')" id="stab-js">🏕 JS Camps</button>
-      <button class="stab" onclick="setSub('ac')" id="stab-ac">📚 Academic Prep</button>
-      <button class="stab" onclick="setSub('sw')" id="stab-sw">🏊 Swimming</button>
-      <button class="stab" onclick="setSub('lcb')" id="stab-lcb">✈️ LCB Malaysia</button>
-      <button class="stab" onclick="setSub('eq')" id="stab-eq">🐎 Equestrian</button>
+  <!-- PROGRAM SUB TABS -->
+  <div class="sr" id="subRow">
+    <span class="lb" style="white-space:nowrap">Program:</span>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="stab a" onclick="setSub('all')" id="sa">All Programs</button>
+      <button class="stab" onclick="setSub('js')" id="sj">🏕 JS Camps</button>
+      <button class="stab" onclick="setSub('ac')" id="sk">📚 Academic Prep</button>
+      <button class="stab" onclick="setSub('sw')" id="ss">🏊 Swimming</button>
+      <button class="stab" onclick="setSub('lcb')" id="sl">✈️ LCB Malaysia</button>
+      <button class="stab" onclick="setSub('eq')" id="se">🐎 Equestrian</button>
     </div>
   </div>
 
   <!-- CARDS -->
   <div class="cards">
-    <div class="card c1"><div class="cl">LV Total 2026</div><div class="cv" id="c-lv">—</div><div class="cs" id="c-lv-s">latest week</div><div class="ci">🏕️</div></div>
-    <div class="card c2"><div class="cl">SPH Total 2026</div><div class="cv" id="c-sph">—</div><div class="cs" id="c-sph-s">all campuses</div><div class="ci">🏫</div></div>
-    <div class="card c3"><div class="cl">vs LV 2025 Final</div><div class="cv" id="c-pct">—</div><div class="cs">LV 2025 final: 564</div><div class="ci">📈</div></div>
-    <div class="card c4"><div class="cl">New This Week</div><div class="cv" id="c-new">—</div><div class="cs" id="c-new-s">LV new registrations</div><div class="ci">✨</div></div>
+    <div class="card c1"><div class="cl">LV Total 2026</div><div class="cv" id="cv-lv">—</div><div class="cs" id="cs-lv">latest week</div><div class="ci">🏕️</div></div>
+    <div class="card c2"><div class="cl">SPH Total 2026</div><div class="cv" id="cv-sph">—</div><div class="cs" id="cs-sph">all campuses</div><div class="ci">🏫</div></div>
+    <div class="card c3"><div class="cl">vs LV 2025 (564)</div><div class="cv" id="cv-pct">—</div><div class="cs" id="cs-pct">progress to 2025 final</div><div class="ci">📈</div></div>
+    <div class="card c4"><div class="cl">New This Week</div><div class="cv" id="cv-new">—</div><div class="cs" id="cs-new">LV new registrations</div><div class="ci">✨</div></div>
   </div>
 
   <!-- CHART -->
-  <div class="section">
-    <div class="sec-hd"><div class="sec-title" id="chart-title">Weekly Registration Trend</div></div>
-    <div class="chart-box"><canvas id="mainChart"></canvas></div>
-    <div class="legend" id="legend"></div>
+  <div class="sec">
+    <div class="sh"><div class="st" id="ct">Weekly Registration Trend</div></div>
+    <div class="cb"><canvas id="mainChart"></canvas></div>
+    <div class="leg" id="leg"></div>
   </div>
 
   <!-- TABLE -->
-  <div class="section">
-    <div class="sec-hd">
-      <div class="sec-title" id="tbl-title">Registration Detail</div>
-      <div style="font-size:11px;color:var(--muted)">Cumulative totals · <span style="color:var(--green);font-weight:700">+X</span> = new vs prior week</div>
+  <div class="sec">
+    <div class="sh">
+      <div class="st" id="tt">Registration Detail</div>
+      <div style="font-size:11px;color:var(--mut)">Cumulative totals · <span style="color:var(--green);font-weight:700">+X</span> = new vs prior week · <span style="color:#1e3a6e;font-weight:700">2025</span> = last year final · <span style="color:#0f5132;font-weight:700">Target</span> = 2026 goal</div>
     </div>
-    <div class="tbl-scroll"><table><thead id="tHead"></thead><tbody id="tBody"></tbody></table></div>
+    <div class="ts"><table><thead id="tHd"></thead><tbody id="tBd"></tbody></table></div>
   </div>
 
 </main>
 
 <!-- MODAL -->
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="m-hd">
+<div class="ov" id="overlay">
+  <div class="mod">
+    <div class="mh">
       <div><h2>Update Weekly Data</h2><p>Enter cumulative registration numbers for the selected week</p></div>
-      <button class="m-x" onclick="closeModal()">✕</button>
+      <button class="mx" onclick="closeModal()">✕</button>
     </div>
-    <div class="m-body">
-      <div class="fg2">
-        <div class="fg"><label>Select Week to Update</label>
-          <select id="inp-week" onchange="prefill()"><option value="">Choose week…</option></select>
+    <div class="mb">
+      <div class="g2">
+        <div class="fg"><label>Select Week</label>
+          <select id="iWk" onchange="prefill()"><option value="">Choose week…</option></select>
         </div>
-        <div class="fg"><label>Or Add New Week Label</label><input type="text" id="inp-newwk" placeholder="e.g. 24-Jul"></div>
+        <div class="fg"><label>Or Add New Week Label</label><input type="text" id="iNwk" placeholder="e.g. 24-Jul"></div>
       </div>
-
-      <div class="fsec">📍 Campus Totals</div>
-      <div class="fg2">
-        <div class="fg"><label>LV (Lippo Village)</label><input type="number" id="i-lv" min="0" placeholder="0"></div>
-        <div class="fg"><label>Kemang Village</label><input type="number" id="i-km" min="0" placeholder="0"></div>
-        <div class="fg"><label>Pluit Village</label><input type="number" id="i-pl" min="0" placeholder="0"></div>
-        <div class="fg"><label>Sentul City</label><input type="number" id="i-sn" min="0" placeholder="0"></div>
+      <div class="fs">📍 Campus Totals</div>
+      <div class="g4">
+        <div class="fg"><label>LV Lippo Village</label><input type="number" id="iLV" min="0"></div>
+        <div class="fg"><label>Kemang Village</label><input type="number" id="iKm" min="0"></div>
+        <div class="fg"><label>Pluit Village</label><input type="number" id="iPl" min="0"></div>
+        <div class="fg"><label>Sentul City</label><input type="number" id="iSn" min="0"></div>
       </div>
-
-      <div class="fsec">🏕️ JS Camps — Bake Lab (Week 1)</div>
-      <div class="fg3">
-        <div class="fg"><label>PreK Bake Lab Jr.</label><input type="number" id="i-b-prek" min="0" placeholder="0"></div>
-        <div class="fg"><label>K1 Bake Lab Jr.</label><input type="number" id="i-b-k1" min="0" placeholder="0"></div>
-        <div class="fg"><label>K2-3 Bake Lab Jr.</label><input type="number" id="i-b-k23" min="0" placeholder="0"></div>
-        <div class="fg"><label>G1-2 Bake Lab</label><input type="number" id="i-b-g12" min="0" placeholder="0"></div>
-        <div class="fg"><label>G3-4 Bake Lab</label><input type="number" id="i-b-g34" min="0" placeholder="0"></div>
-        <div class="fg"><label>G5-8 Bake Lab</label><input type="number" id="i-b-g58" min="0" placeholder="0"></div>
+      <div class="fs">🏕️ JS Camps — Bake Lab (Kindy & JS Week 1)</div>
+      <div class="g3">
+        <div class="fg"><label>PreK Bake Lab Jr.</label><input type="number" id="iBpk" min="0"></div>
+        <div class="fg"><label>K1 Bake Lab Jr.</label><input type="number" id="iBk1" min="0"></div>
+        <div class="fg"><label>K2-3 Bake Lab Jr.</label><input type="number" id="iBk23" min="0"></div>
+        <div class="fg"><label>G1-2 Bake Lab</label><input type="number" id="iBg12" min="0"></div>
+        <div class="fg"><label>G3-4 Bake Lab</label><input type="number" id="iBg34" min="0"></div>
+        <div class="fg"><label>G5-8 Bake Lab</label><input type="number" id="iBg58" min="0"></div>
       </div>
-
-      <div class="fsec">🏕️ JS Camps — Move Lab (Week 2)</div>
-      <div class="fg3">
-        <div class="fg"><label>PreK Move Lab Jr.</label><input type="number" id="i-m-prek" min="0" placeholder="0"></div>
-        <div class="fg"><label>K1 Move Lab Jr.</label><input type="number" id="i-m-k1" min="0" placeholder="0"></div>
-        <div class="fg"><label>K2-3 Move Lab Jr.</label><input type="number" id="i-m-k23" min="0" placeholder="0"></div>
-        <div class="fg"><label>G1-2 Move Lab</label><input type="number" id="i-m-g12" min="0" placeholder="0"></div>
-        <div class="fg"><label>G3-4 Move Lab</label><input type="number" id="i-m-g34" min="0" placeholder="0"></div>
-        <div class="fg"><label>G5-8 Move Lab</label><input type="number" id="i-m-g58" min="0" placeholder="0"></div>
+      <div class="fs">🏕️ JS Camps — Move Lab (Kindy & JS Week 2)</div>
+      <div class="g3">
+        <div class="fg"><label>PreK Move Lab Jr.</label><input type="number" id="iMpk" min="0"></div>
+        <div class="fg"><label>K1 Move Lab Jr.</label><input type="number" id="iMk1" min="0"></div>
+        <div class="fg"><label>K2-3 Move Lab Jr.</label><input type="number" id="iMk23" min="0"></div>
+        <div class="fg"><label>G1-2 Move Lab</label><input type="number" id="iMg12" min="0"></div>
+        <div class="fg"><label>G3-4 Move Lab</label><input type="number" id="iMg34" min="0"></div>
+        <div class="fg"><label>G5-8 Move Lab</label><input type="number" id="iMg58" min="0"></div>
       </div>
-
-      <div class="fsec">🏕️ JS Camps — Lifeway VBS</div>
-      <div class="fg3">
-        <div class="fg"><label>VBS JR. Pre K</label><input type="number" id="i-v-prek" min="0" placeholder="0"></div>
-        <div class="fg"><label>VBS JR. K1</label><input type="number" id="i-v-k1" min="0" placeholder="0"></div>
-        <div class="fg"><label>VBS JR. K2-3</label><input type="number" id="i-v-k23" min="0" placeholder="0"></div>
-        <div class="fg"><label>VBS JS G1-2</label><input type="number" id="i-v-g12" min="0" placeholder="0"></div>
-        <div class="fg"><label>VBS JS G3-4</label><input type="number" id="i-v-g34" min="0" placeholder="0"></div>
-        <div class="fg"><label>VBS JS G5-8</label><input type="number" id="i-v-g58" min="0" placeholder="0"></div>
+      <div class="fs">🏕️ JS Camps — Lifeway VBS</div>
+      <div class="g3">
+        <div class="fg"><label>VBS JR. Pre K</label><input type="number" id="iVpk" min="0"></div>
+        <div class="fg"><label>VBS JR. K1</label><input type="number" id="iVk1" min="0"></div>
+        <div class="fg"><label>VBS JR. K2-3</label><input type="number" id="iVk23" min="0"></div>
+        <div class="fg"><label>VBS JS G1-2</label><input type="number" id="iVg12" min="0"></div>
+        <div class="fg"><label>VBS JS G3-4</label><input type="number" id="iVg34" min="0"></div>
+        <div class="fg"><label>VBS JS G5-8</label><input type="number" id="iVg58" min="0"></div>
       </div>
-
-      <div class="fsec">📚 Academic Prep</div>
-      <div class="fg3">
-        <div class="fg"><label>Gr 7-8 All</label><input type="number" id="i-a-78" min="0" placeholder="0"></div>
-        <div class="fg"><label>Gr 9-10 All</label><input type="number" id="i-a-910" min="0" placeholder="0"></div>
-        <div class="fg"><label>Gr 11-12 All</label><input type="number" id="i-a-1112" min="0" placeholder="0"></div>
+      <div class="fs">📚 Academic Prep &nbsp;·&nbsp; 🏊 Swimming &nbsp;·&nbsp; ✈️ LCB &nbsp;·&nbsp; 🐎 Equestrian</div>
+      <div class="g4">
+        <div class="fg"><label>Acad. Prep Gr7-8</label><input type="number" id="iA78" min="0"></div>
+        <div class="fg"><label>Acad. Prep Gr9-10</label><input type="number" id="iA910" min="0"></div>
+        <div class="fg"><label>Acad. Prep Gr11-12</label><input type="number" id="iA1112" min="0"></div>
+        <div class="fg"><label>Swimming Camp</label><input type="number" id="iSw" min="0"></div>
+        <div class="fg"><label>LCB Trip Malaysia</label><input type="number" id="iLcb" min="0"></div>
+        <div class="fg"><label>Equestrian Group</label><input type="number" id="iEqg" min="0"></div>
+        <div class="fg"><label>Equestrian Private</label><input type="number" id="iEqp" min="0"></div>
       </div>
-
-      <div class="fsec">🏊 Swimming &nbsp;·&nbsp; ✈️ LCB &nbsp;·&nbsp; 🐎 Equestrian</div>
-      <div class="fg3">
-        <div class="fg"><label>Swimming Camp</label><input type="number" id="i-sw" min="0" placeholder="0"></div>
-        <div class="fg"><label>LCB Trip Malaysia</label><input type="number" id="i-lcb" min="0" placeholder="0"></div>
-        <div class="fg"><label>Equestrian Group</label><input type="number" id="i-eq-g" min="0" placeholder="0"></div>
-        <div class="fg"><label>Equestrian Private</label><input type="number" id="i-eq-p" min="0" placeholder="0"></div>
-      </div>
-
-      <div class="tip">💡 Enter <strong>cumulative totals</strong> (running total, not just this week's new ones). The dashboard will auto-calculate weekly new registrations.</div>
+      <div class="tip">💡 Enter <strong>cumulative totals</strong> — running total for the season, not just this week's new ones. Campus totals are auto-computed if all 4 campuses are filled.</div>
     </div>
-    <div class="m-foot">
-      <button class="bcancel" onclick="closeModal()">Cancel</button>
-      <button class="bsave" onclick="saveData()">Save &amp; Refresh</button>
+    <div class="mf">
+      <button class="bcn" onclick="closeModal()">Cancel</button>
+      <button class="bsv" onclick="saveData()">Save &amp; Refresh</button>
     </div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// DATA — corrected from Excel + images
+// ═══════════════════════════════════════════════════
 const WKS = ['10-Apr','17-Apr','24-Apr','1-May','8-May','15-May','22-May','29-May','5-Jun','12-Jun','19-Jun','26-Jun','3-Jul','10-Jul','17-Jul'];
+const NW = WKS.length;
+const n = () => Array(NW).fill(null);
 
-const DEF = {
+// Helper: set values for first N positions, null rest
+function wd(...v){ const a=n(); v.forEach((x,i)=>a[i]=x); return a; }
+
+// Data shape: each entry { y2025, target, data:[...NW values, null=not yet entered] }
+const DEF_RAW = {
   weeks: [...WKS],
   campuses: {
-    'LV':     [6,29,32,0,0,0,0,0,0,0,0,0,0,0,0],
-    'Kemang': [3,9,11,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Pluit':  [0,0,1,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Sentul': [0,3,6,null,null,null,null,null,null,null,null,null,null,null,null],
+    LV:     { y2025:564, target:null, data:wd(6,29,32,33) },
+    Kemang: { y2025:80,  target:null, data:wd(3,9,11,12) },
+    Pluit:  { y2025:99,  target:null, data:wd(0,0,1,1) },
+    Sentul: { y2025:53,  target:null, data:wd(0,3,6,6) },
   },
-  sph2026: [9,41,50,0,0,0,0,0,0,0,0,0,0,0,0],
-  sph2025: [null,46,82,110,196,321,379,346,544,580,651,692,701,755,796],
-  // JS Camp sub-programs
+  sph26: { y2025:null, target:null, data:wd(9,41,50,52) },
+  sph25: { y2025:null, target:null, data:wd(null,46,82,110,196,321,379,346,544,580,651,692,701,755,796) },
+  // JS Camps sub-programs
   js: {
-    '(Kindy W1) PreK Bake Lab Jr.':  [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(Kindy W1) K1 Bake Lab Jr.':    [0,1,1,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(Kindy W1) K2-3 Bake Lab Jr.':  [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(JS W1) G1-2 Bake Lab':         [0,0,1,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(JS W1) G3-4 Bake Lab':         [0,1,1,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(JS W1) G5-8 Bake Lab':         [0,2,2,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(Kindy W2) PreK Move Lab Jr.':  [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(Kindy W2) K1 Move Lab Jr.':    [0,1,1,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(Kindy W2) K2-3 Move Lab Jr.':  [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(JS W2) G1-2 Move Lab':         [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(JS W2) G3-4 Move Lab':         [0,2,2,null,null,null,null,null,null,null,null,null,null,null,null],
-    '(JS W2) G5-8 Move Lab':         [0,2,2,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Lifeway VBS JR. Pre K':         [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Lifeway VBS JR. K1':            [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Lifeway VBS JR. K2-3':          [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Lifeway VBS JS G1-2':           [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Lifeway VBS JS G3-4':           [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Lifeway VBS JS G5-8':           [0,1,1,null,null,null,null,null,null,null,null,null,null,null,null],
+    '(Kindy W1) PreK Bake Lab Jr.': { y2025:7,  target:15, data:wd(0,0,0,0) },
+    '(Kindy W1) K1 Bake Lab Jr.':   { y2025:22, target:20, data:wd(0,1,1,1) },
+    '(Kindy W1) K2-3 Bake Lab Jr.': { y2025:21, target:22, data:wd(0,0,0,0) },
+    '(JS W1) G1-2 Bake Lab':        { y2025:19, target:22, data:wd(0,0,1,1) },
+    '(JS W1) G3-4 Bake Lab':        { y2025:20, target:22, data:wd(0,1,1,1) },
+    '(JS W1) G5-8 Bake Lab':        { y2025:11, target:20, data:wd(0,2,2,2) },
+    '(Kindy W2) PreK Move Lab Jr.': { y2025:5,  target:15, data:wd(0,0,0,0) },
+    '(Kindy W2) K1 Move Lab Jr.':   { y2025:16, target:20, data:wd(0,1,1,1) },
+    '(Kindy W2) K2-3 Move Lab Jr.': { y2025:21, target:22, data:wd(0,0,0,0) },
+    '(JS W2) G1-2 Move Lab':        { y2025:11, target:22, data:wd(0,0,0,0) },
+    '(JS W2) G3-4 Move Lab':        { y2025:14, target:22, data:wd(0,2,2,2) },
+    '(JS W2) G5-8 Move Lab':        { y2025:11, target:20, data:wd(0,2,2,2) },
+    'Lifeway VBS JR. Pre K':        { y2025:10, target:15, data:wd(0,0,0,0) },
+    'Lifeway VBS JR. K1':           { y2025:16, target:20, data:wd(0,0,0,0) },
+    'Lifeway VBS JR. K2-3':         { y2025:34, target:20, data:wd(0,0,0,0) },
+    'Lifeway VBS JS G1-2':          { y2025:33, target:20, data:wd(0,0,0,0) },
+    'Lifeway VBS JS G3-4':          { y2025:26, target:20, data:wd(0,0,0,1) },
+    'Lifeway VBS JS G5-8':          { y2025:23, target:20, data:wd(0,1,1,1) },
   },
-  jsTotal: [0,10,11,0,0,0,0,0,0,0,0,0,0,0,0],
-  // Academic
+  jsT: { y2025:320, target:357, data:wd(0,10,11,12) },
+  // Academic Prep
   academic: {
-    'Acad. Prep Gr7-8 All':   [2,2,2,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Acad. Prep Gr9-10 All':  [1,2,2,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Acad. Prep Gr11-12 All': [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null],
+    'Acad. Prep Gr7-8 All':   { y2025:14, target:20, data:wd(2,2,2,2) },
+    'Acad. Prep Gr9-10 All':  { y2025:19, target:20, data:wd(1,2,2,2) },
+    'Acad. Prep Gr11-12 All': { y2025:5,  target:10, data:wd(0,0,0,0) },
   },
-  acTotal: [3,4,4,0,0,0,0,0,0,0,0,0,0,0,0],
+  acT: { y2025:38, target:50, data:wd(3,4,4,4) },
   // Swimming
-  swimming: { 'Swimming Camp': [1,4,5,null,null,null,null,null,null,null,null,null,null,null,null] },
-  swTotal: [1,4,5,0,0,0,0,0,0,0,0,0,0,0,0],
+  swimming: { 'Swimming Camp': { y2025:37, target:40, data:wd(1,4,5,5) } },
+  swT: { y2025:37, target:40, data:wd(1,4,5,5) },
   // LCB
-  lcb: { 'LCB Trip to Malaysia': [0,0,0,null,null,null,null,null,null,null,null,null,null,null,null] },
-  lcbTotal: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  lcb: { 'LCB Trip to Malaysia': { y2025:12, target:12, data:wd(0,0,0,0) } },
+  lcbT: { y2025:12, target:12, data:wd(0,0,0,0) },
   // Equestrian
   equestrian: {
-    'Equestrian Group':   [2,7,8,null,null,null,null,null,null,null,null,null,null,null,null],
-    'Equestrian Private': [0,4,4,null,null,null,null,null,null,null,null,null,null,null,null],
+    'Equestrian Group':   { y2025:null, target:40, data:wd(2,7,8,8) },
+    'Equestrian Private': { y2025:null, target:20, data:wd(0,4,4,4) },
   },
-  eqTotal: [2,11,12,0,0,0,0,0,0,0,0,0,0,0,0],
-  // Summary programs
+  eqT: { y2025:null, target:60, data:wd(2,11,12,12) },
+  // Program-level totals (for "All Programs" chart view)
   programs: {
-    'JS Camps':      [0,10,11,0,0,0,0,0,0,0,0,0,0,0,0],
-    'Academic Prep': [3,4,4,0,0,0,0,0,0,0,0,0,0,0,0],
-    'Swimming':      [1,4,5,0,0,0,0,0,0,0,0,0,0,0,0],
-    'LCB Malaysia':  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    'Equestrian':    [2,11,12,0,0,0,0,0,0,0,0,0,0,0,0],
+    'JS Camps':      { y2025:320, target:357, data:wd(0,10,11,12) },
+    'Academic Prep': { y2025:38,  target:50,  data:wd(3,4,4,4) },
+    'Swimming':      { y2025:37,  target:40,  data:wd(1,4,5,5) },
+    'LCB Malaysia':  { y2025:12,  target:12,  data:wd(0,0,0,0) },
+    'Equestrian':    { y2025:null, target:60, data:wd(2,11,12,12) },
   }
 };
 
-// ── Colors ─────────────────────────────────────────────────
-const CC = { LV:'#1d4ed8', Kemang:'#d97706', Pluit:'#7c3aed', Sentul:'#0d9488' };
-const PC = { 'JS Camps':'#3b82f6','Academic Prep':'#f59e0b','Swimming':'#06b6d4','LCB Malaysia':'#8b5cf6','Equestrian':'#10b981' };
-const JS_C = ['#1e40af','#2563eb','#60a5fa','#0d9488','#0f766e','#2dd4bf','#7c3aed','#a78bfa','#d946ef','#db2777','#b45309','#d97706','#f59e0b','#92400e','#dc2626','#ef4444','#16a34a','#4ade80'];
-const SC_COL = { all:'#0f1f3d', js:'#2563eb', ac:'#d97706', sw:'#0891b2', lcb:'#7c3aed', eq:'#059669' };
-
-// ── State ──────────────────────────────────────────────────
-let D = (() => { try { const s=localStorage.getItem('sph26'); return s?JSON.parse(s):JSON.parse(JSON.stringify(DEF)); } catch(e){ return JSON.parse(JSON.stringify(DEF)); } })();
+// ── Storage ─────────────────────────────────────────────────
+function loadD(){
+  try{ const s=localStorage.getItem('sph26v3'); return s?JSON.parse(s):JSON.parse(JSON.stringify(DEF_RAW)); }
+  catch(e){ return JSON.parse(JSON.stringify(DEF_RAW)); }
+}
+function saveD(d){
+  localStorage.setItem('sph26v3',JSON.stringify(d));
+  const ts=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  localStorage.setItem('sph26v3_ts',ts);
+  document.getElementById('lbl-ts').textContent='Updated: '+ts;
+}
+let D=loadD();
 let view='total', sub='all', metric='cum', chart=null;
 
-// ── Helpers ────────────────────────────────────────────────
-const lastV = a => { for(let i=a.length-1;i>=0;i--) if(a[i]!==null) return a[i]; return 0; };
-const lastI = a => { for(let i=a.length-1;i>=0;i--) if(a[i]!==null) return i; return -1; };
-const toWk = a => a.map((v,i)=>{ if(v===null)return null; return i===0?v:(a[i-1]===null?v:v-a[i-1]); });
-const xf = a => metric==='cum'?a:toWk(a);
+// ── Helpers ─────────────────────────────────────────────────
+const lastV = a=>{ for(let i=a.length-1;i>=0;i--) if(a[i]!==null) return a[i]; return null; };
+const lastI = a=>{ for(let i=a.length-1;i>=0;i--) if(a[i]!==null) return i; return -1; };
+const toWk  = a=>a.map((v,i)=>{ if(v===null)return null; return i===0?v:(a[i-1]===null?v:v-a[i-1]); });
+const xf    = a=>metric==='cum'?a:toWk(a);
+const fmt   = v=>v===null?'—':v;
+const pct   = (a,b)=>(!b||!a)?'—':(a/b*100).toFixed(1)+'%';
 
-// ── Cards ──────────────────────────────────────────────────
+// ── CARDS ────────────────────────────────────────────────────
 function updateCards(){
-  const lv=lastV(D.campuses.LV), sph=lastV(D.sph2026);
-  const li=lastI(D.campuses.LV);
-  const nw=li<=0?(D.campuses.LV[0]||0):(D.campuses.LV[li]||0)-(D.campuses.LV[li-1]||0);
-  document.getElementById('c-lv').textContent=lv;
-  document.getElementById('c-lv-s').textContent='week of '+(D.weeks[li]||'—');
-  document.getElementById('c-sph').textContent=sph;
-  document.getElementById('c-pct').textContent=((lv/564)*100).toFixed(1)+'%';
-  document.getElementById('c-new').textContent=(nw>=0?'+':'')+nw;
+  const lv = lastV(D.campuses.LV.data) ?? 0;
+  const sph = lastV(D.sph26.data) ?? 0;
+  const li  = lastI(D.campuses.LV.data);
+  const nw  = li<=0 ? (D.campuses.LV.data[0]??0)
+              : (D.campuses.LV.data[li]??0) - (D.campuses.LV.data[li-1]??0);
+  const p = (lv/564*100).toFixed(1);
+  document.getElementById('cv-lv').textContent  = lv;
+  document.getElementById('cs-lv').textContent  = li>=0?'week of '+D.weeks[li]:'no data yet';
+  document.getElementById('cv-sph').textContent = sph;
+  document.getElementById('cs-sph').textContent = Object.keys(D.campuses).length+' campuses tracked';
+  document.getElementById('cv-pct').textContent = p+'%';
+  document.getElementById('cs-pct').textContent = 'LV 2025 final: 564';
+  document.getElementById('cv-new').textContent = (nw>=0?'+':'')+nw;
+  document.getElementById('cs-new').textContent = li>=0?'vs week of '+(D.weeks[li-1]||'—'):'LV new registrations';
 }
 
-// ── Dataset builder ────────────────────────────────────────
-function ds(label,arr,color,dashed,fill){
-  const t=xf(arr);
-  return { label, fill:!!fill, data:arr.map((v,i)=>v!==null?t[i]:null),
-    borderColor:color, backgroundColor:color+'18', borderWidth:2.5,
-    pointRadius:5, pointHoverRadius:7, tension:0.35, spanGaps:false,
-    borderDash:dashed?[6,4]:undefined };
+// ── CHART COLORS ──────────────────────────────────────────────
+const CC = { LV:'#1d4ed8',Kemang:'#d97706',Pluit:'#7c3aed',Sentul:'#0d9488' };
+const PC = { 'JS Camps':'#3b82f6','Academic Prep':'#f59e0b','Swimming':'#06b6d4','LCB Malaysia':'#8b5cf6','Equestrian':'#10b981' };
+const JC = ['#1e40af','#2563eb','#60a5fa','#0d9488','#0f766e','#2dd4bf','#6d28d9','#7c3aed','#a78bfa','#d946ef','#db2777','#b45309','#d97706','#f59e0b','#dc2626','#ef4444','#16a34a','#4ade80'];
+const SC = { all:'#0f1f3d',js:'#2563eb',ac:'#d97706',sw:'#0891b2',lcb:'#7c3aed',eq:'#059669' };
+
+function mkDs(label,obj,color,dashed,fill,idx){
+  const arr=obj.data, t=xf(arr);
+  return {
+    label, fill:!!fill,
+    data:arr.map((v,i)=>v!==null?t[i]:null),
+    borderColor:color, backgroundColor:color+'18',
+    borderWidth:2.5, pointRadius:4, pointHoverRadius:6,
+    tension:0.35, spanGaps:false,
+    borderDash:dashed?[6,4]:undefined,
+    _dsIdx:idx??0
+  };
 }
+
 function getDS(){
-  if(view==='total') return [ds('SPH Total 2026',D.sph2026,'#1d4ed8',0,1),ds('LV Lippo Village',D.campuses.LV,'#06b6d4'),ds('SPH 2025 (ref.)',D.sph2025,'#94a3b8',1)];
-  if(view==='campus') return Object.entries(D.campuses).map(([n,a])=>ds(n,a,CC[n]||'#888',0,n==='LV'));
-  if(view==='vs2025') return [ds('LV 2026',D.campuses.LV,'#1d4ed8',0,1),ds('SPH 2025 (ref.)',D.sph2025,'#94a3b8',1)];
+  if(view==='total') return [
+    mkDs('SPH Total 2026',D.sph26,'#1d4ed8',0,1,0),
+    mkDs('LV Lippo Village',D.campuses.LV,'#06b6d4',0,0,1),
+    mkDs('SPH 2025 (ref.)',D.sph25,'#94a3b8',1,0,2)
+  ];
+  if(view==='campus') return Object.entries(D.campuses).map(([n,o],i)=>mkDs(n,o,CC[n]||'#888',0,n==='LV',i));
+  if(view==='vs25') return [mkDs('LV 2026',D.campuses.LV,'#1d4ed8',0,1,0),mkDs('SPH 2025 (ref.)',D.sph25,'#94a3b8',1,0,1)];
   // By Program
-  if(sub==='all') return Object.entries(D.programs).map(([n,a])=>ds(n,a,PC[n]||'#888'));
+  if(sub==='all') return Object.entries(D.programs).map(([n,o],i)=>mkDs(n,o,PC[n]||'#888',0,0,i));
   if(sub==='js'){
-    const r=Object.entries(D.js).map(([n,a],i)=>ds(n,a,JS_C[i%JS_C.length]));
-    r.push(ds('JS Camps Total',D.jsTotal,'#1e3a5f'));
+    const r=Object.entries(D.js).map(([n,o],i)=>mkDs(n,o,JC[i%JC.length],0,0,i));
+    r.push(mkDs('JS Camps Total',D.jsT,'#1e3a5f',0,0,r.length));
     return r;
   }
   if(sub==='ac'){
-    const r=Object.entries(D.academic).map(([n,a],i)=>ds(n,a,['#1d4ed8','#f59e0b','#10b981'][i]));
-    r.push(ds('Acad. Prep Total',D.acTotal,'#92400e'));
+    const cols=['#1d4ed8','#f59e0b','#10b981'];
+    const r=Object.entries(D.academic).map(([n,o],i)=>mkDs(n,o,cols[i],0,0,i));
+    r.push(mkDs('Academic Prep Total',D.acT,'#92400e',0,0,r.length));
     return r;
   }
-  if(sub==='sw') return [ds('Swimming Camp',D.swimming['Swimming Camp'],'#06b6d4',0,1)];
-  if(sub==='lcb') return [ds('LCB Trip to Malaysia',D.lcb['LCB Trip to Malaysia'],'#7c3aed',0,1)];
+  if(sub==='sw') return [mkDs('Swimming Camp',D.swimming['Swimming Camp'],'#06b6d4',0,1,0)];
+  if(sub==='lcb') return [mkDs('LCB Trip to Malaysia',D.lcb['LCB Trip to Malaysia'],'#7c3aed',0,1,0)];
   if(sub==='eq'){
-    const r=Object.entries(D.equestrian).map(([n,a],i)=>ds(n,a,['#10b981','#059669'][i]));
-    r.push(ds('Equestrian Total',D.eqTotal,'#064e3b'));
+    const r=[mkDs('Equestrian Group',D.equestrian['Equestrian Group'],'#10b981',0,0,0),mkDs('Equestrian Private',D.equestrian['Equestrian Private'],'#059669',0,0,1)];
+    r.push(mkDs('Equestrian Total',D.eqT,'#064e3b',0,0,2));
     return r;
   }
   return [];
 }
 
-// ── Chart ──────────────────────────────────────────────────
+// ── CHART ────────────────────────────────────────────────────
 function renderChart(){
   if(chart)chart.destroy();
   const isCum=metric==='cum';
   const datasets=getDS();
+  const manyLines=datasets.length>6;
+
   chart=new Chart(document.getElementById('mainChart').getContext('2d'),{
     type:'line', data:{labels:D.weeks,datasets},
     options:{
-      responsive:true,maintainAspectRatio:false,
+      responsive:true, maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{display:false},
-        tooltip:{backgroundColor:'#0f1f3d',titleFont:{family:'DM Sans',weight:'600'},bodyFont:{family:'DM Sans'},padding:11,cornerRadius:8,
-          callbacks:{label:ctx=>{ const v=ctx.raw; if(v===null||v===undefined)return`  ${ctx.dataset.label}: —`; return`  ${ctx.dataset.label}: ${!isCum&&v>=0?'+':''}${v}`; }}}
+        tooltip:{
+          backgroundColor:'#0f1f3d',
+          titleFont:{family:'DM Sans',weight:'600'},
+          bodyFont:{family:'DM Sans'},padding:12,cornerRadius:8,
+          callbacks:{
+            label:c=>{
+              const v=c.raw;
+              if(v===null||v===undefined) return`  ${c.dataset.label}: —`;
+              return`  ${c.dataset.label}: ${!isCum&&v>0?'+':''}${v}`;
+            }
+          }
+        }
       },
       scales:{
-        x:{grid:{color:'#f1f5f9'},ticks:{font:{family:'DM Sans',size:10.5},color:'#94a3b8'},border:{color:'#e2e8f0'}},
-        y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{family:'DM Sans',size:10.5},color:'#94a3b8'},border:{color:'#e2e8f0'}}
+        x:{grid:{color:'#f1f5f9'},ticks:{font:{family:'DM Sans',size:10},color:'#94a3b8'},border:{color:'#e2e8f0'}},
+        y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{family:'DM Sans',size:10},color:'#94a3b8'},border:{color:'#e2e8f0'}}
       }
     },
-    plugins:[{id:'lbl',afterDatasetsDraw(ch){
-      const c=ch.ctx;
-      ch.data.datasets.forEach((d,di)=>{
-        const m=ch.getDatasetMeta(di);
-        m.data.forEach((pt,i)=>{
-          const v=d.data[i]; if(v===null||v===undefined)return;
-          const txt=(!isCum&&i>0&&v>=0)?'+'+v:String(v);
-          c.save();
-          c.beginPath();c.arc(pt.x,pt.y-17,10,0,Math.PI*2);
-          c.fillStyle=d.borderColor;c.fill();
-          c.font='700 9.5px DM Sans';c.textAlign='center';c.fillStyle='#fff';
-          c.fillText(txt,pt.x,pt.y-13);c.restore();
+    plugins:[{
+      id:'ptLabels',
+      afterDatasetsDraw(ch){
+        if(manyLines)return; // skip labels when too many lines
+        const ctx=ch.ctx;
+        // Collect all label positions first to detect overlap
+        const positions=[];
+        ch.data.datasets.forEach((ds,di)=>{
+          const meta=ch.getDatasetMeta(di);
+          meta.data.forEach((pt,i)=>{
+            const v=ds.data[i];
+            if(v===null||v===undefined) return;
+            if(isCum && v<=0) return; // skip zero/null in cumulative
+            if(!isCum && v===0) return; // skip zero in weekly
+            positions.push({pt,v,di,i,color:ds.borderColor,isCum});
+          });
         });
-      });
-    }}]
+
+        // Render with stagger to reduce overlap
+        // Group by x index, then spread y offsets
+        const byX={};
+        positions.forEach(p=>{
+          const xi=p.i;
+          if(!byX[xi])byX[xi]=[];
+          byX[xi].push(p);
+        });
+
+        Object.values(byX).forEach(group=>{
+          group.forEach((p,gi)=>{
+            const r=9;
+            // Stagger: alternating above/below with spacing
+            const n=group.length;
+            let yOff;
+            if(n===1){ yOff=-22; }
+            else if(n===2){ yOff=gi===0?-22:14; }
+            else if(n===3){ yOff=[-36,-22,14][gi]; }
+            else{ yOff=gi%2===0?(-22-Math.floor(gi/2)*16):(14+Math.floor(gi/2)*16); }
+
+            const lx=p.pt.x, ly=p.pt.y+yOff;
+            const lbl=(!p.isCum&&p.i>0&&p.v>0)?'+'+p.v:String(p.v);
+
+            ctx.save();
+            ctx.beginPath();ctx.arc(lx,ly,r,0,Math.PI*2);
+            ctx.fillStyle=p.color;ctx.fill();
+            ctx.font='700 9px DM Sans';ctx.textAlign='center';ctx.textBaseline='middle';
+            ctx.fillStyle='#fff';ctx.fillText(lbl,lx,ly);
+            ctx.restore();
+
+            // connector line from point to bubble
+            if(Math.abs(yOff)>14){
+              ctx.save();
+              ctx.strokeStyle=p.color+'80';ctx.lineWidth=1;
+              ctx.beginPath();ctx.moveTo(lx,p.pt.y+(yOff>0?-4:4));ctx.lineTo(lx,ly+(yOff>0?-r:r));
+              ctx.stroke();ctx.restore();
+            }
+          });
+        });
+      }
+    }]
   });
-  document.getElementById('legend').innerHTML=datasets.map(d=>`<div class="leg-i"><span class="leg-dot" style="background:${d.borderColor}${d.borderDash?';opacity:.5':''}"></span>${d.label}</div>`).join('');
+
+  // Legend
+  document.getElementById('leg').innerHTML=datasets.map(d=>`
+    <div class="li">
+      <span class="ld" style="background:${d.borderColor}${d.borderDash?';opacity:.5':''}"></span>${d.label}
+    </div>`).join('');
 }
 
-// ── Table ──────────────────────────────────────────────────
-function cell(v,prev){
+// ── TABLE ──────────────────────────────────────────────────────
+function cel(v,prev,isCum){
   if(v===null)return`<td class="nd">—</td>`;
   const delta=prev!==null&&prev!==undefined?v-prev:null;
-  const isCum=metric==='cum';
   const disp=isCum?v:(delta!==null?delta:v);
   let badge='';
-  if(isCum&&delta!==null&&delta!==0)badge=`<span class="${delta>0?'bn':'bd'}">${delta>0?'+':''}${delta}</span>`;
+  if(isCum&&delta!==null&&delta!==0)
+    badge=`<span class="${delta>0?'bn':'bd'}">${delta>0?'+':''}${delta}</span>`;
   return`<td>${disp}${badge}</td>`;
 }
-function row(label,arr,cls=''){
-  const cells=arr.map((v,i)=>cell(v,i>0?arr[i-1]:null)).join('');
-  return`<tr class="${cls}"><td>${label}</td>${cells}<td><strong>${lastV(arr)||'—'}</strong></tr>`;
+function pctCell(v,tgt){
+  if(!v||!tgt)return`<td class="nd">—</td>`;
+  const p=(v/tgt*100).toFixed(0);
+  const cls=parseInt(p)>=80?'ok':'lo';
+  return`<td class="pct ${cls}">${p}%</td>`;
 }
-function sep(t){return`<tr class="rt"><td colspan="${D.weeks.length+2}">${t}</td></tr>`;}
-
+function mkRow(label,obj,cls='',indent=false){
+  const isCum=metric==='cum';
+  const a=obj.data;
+  const cells=a.map((v,i)=>cel(v,i>0?a[i-1]:null,isCum)).join('');
+  const lv=lastV(a); const disp=lv!==null?lv:'—';
+  const y25col=obj.y2025!==null&&obj.y2025!==undefined?`<td class="y25">${obj.y2025}</td>`:`<td class="nd">—</td>`;
+  const tgtcol=obj.target!==null&&obj.target!==undefined?`<td class="tgt">${obj.target}</td>`:`<td class="nd">—</td>`;
+  const pCol=pctCell(lv,obj.target);
+  return`<tr class="${cls}"><td${indent?' style="padding-left:18px"':''}>${label}</td>${y25col}${tgtcol}${cells}<td><strong>${disp}</strong></td>${pCol}</tr>`;
+}
+function sepRow(txt){
+  return`<tr class="rt"><td colspan="${D.weeks.length+4}">${txt}</td></tr>`;
+}
 function renderTable(){
-  document.getElementById('tHead').innerHTML=`<tr><th>Program / Campus</th>${D.weeks.map(w=>`<th>${w}</th>`).join('')}<th>Latest</th></tr>`;
+  // Header
+  document.getElementById('tHd').innerHTML=`<tr>
+    <th>Program / Campus</th>
+    <th class="c25">2025</th>
+    <th class="ctg">Target</th>
+    ${D.weeks.map(w=>`<th>${w}</th>`).join('')}
+    <th class="clt">Latest</th>
+    <th class="ctg">% Target</th>
+  </tr>`;
+
   let h='';
   if(view==='total'||view==='campus'){
-    h+=sep('CAMPUS BREAKDOWN — SPH SUMMER 2026');
-    Object.entries(D.campuses).forEach(([n,a])=>h+=row(n,a,n==='LV'?'rs':''));
-    h+=row('SPH Total 2026',D.sph2026,'rs')+row('SPH 2025 Total ↩',D.sph2025);
-  } else if(view==='vs2025'){
-    h+=sep('LV 2026 vs SPH 2025');
-    h+=row('LV Lippo Village 2026',D.campuses.LV,'rs')+row('SPH Total 2025 (ref.)',D.sph2025);
-  } else { // program
+    h+=sepRow('CAMPUS BREAKDOWN — SPH SUMMER 2026');
+    Object.entries(D.campuses).forEach(([nm,o])=>h+=mkRow(nm,o,nm==='LV'?'rs':''));
+    h+=mkRow('SPH Total 2026',D.sph26,'rs');
+    h+=mkRow('SPH Total 2025 ↩',D.sph25,'');
+  } else if(view==='vs25'){
+    h+=sepRow('LV 2026 vs SPH 2025 REFERENCE');
+    h+=mkRow('LV Lippo Village 2026',D.campuses.LV,'rs');
+    h+=mkRow('SPH Total 2025 (ref.)',D.sph25,'');
+  } else {
+    // By Program — always show full grade breakdown in ALL sub-views
+    if(sub==='all'||sub==='js'){
+      h+=sepRow('🏕️ JS CAMPS');
+      h+=sepRow('  ▸ Bake Lab — Week 1');
+      ['(Kindy W1) PreK Bake Lab Jr.','(Kindy W1) K1 Bake Lab Jr.','(Kindy W1) K2-3 Bake Lab Jr.','(JS W1) G1-2 Bake Lab','(JS W1) G3-4 Bake Lab','(JS W1) G5-8 Bake Lab'].forEach(k=>h+=mkRow(k,D.js[k],'rp',true));
+      h+=sepRow('  ▸ Move Lab — Week 2');
+      ['(Kindy W2) PreK Move Lab Jr.','(Kindy W2) K1 Move Lab Jr.','(Kindy W2) K2-3 Move Lab Jr.','(JS W2) G1-2 Move Lab','(JS W2) G3-4 Move Lab','(JS W2) G5-8 Move Lab'].forEach(k=>h+=mkRow(k,D.js[k],'rp',true));
+      h+=sepRow('  ▸ Lifeway VBS');
+      ['Lifeway VBS JR. Pre K','Lifeway VBS JR. K1','Lifeway VBS JR. K2-3','Lifeway VBS JS G1-2','Lifeway VBS JS G3-4','Lifeway VBS JS G5-8'].forEach(k=>h+=mkRow(k,D.js[k],'rp',true));
+      h+=mkRow('JS Camps Total',D.jsT,'rs');
+    }
+    if(sub==='all'||sub==='ac'){
+      h+=sepRow('📚 ACADEMIC PREP CAMP');
+      Object.entries(D.academic).forEach(([k,o])=>h+=mkRow(k,o,'rp',true));
+      h+=mkRow('Academic Prep Total',D.acT,'rs');
+    }
+    if(sub==='all'||sub==='sw'){
+      h+=sepRow('🏊 SWIMMING CAMP');
+      h+=mkRow('Swimming Camp',D.swimming['Swimming Camp'],'rp',true);
+      h+=mkRow('Swimming Total',D.swT,'rs');
+    }
+    if(sub==='all'||sub==='lcb'){
+      h+=sepRow('✈️ LCB TRIP TO MALAYSIA');
+      h+=mkRow('LCB Trip to Malaysia',D.lcb['LCB Trip to Malaysia'],'rp',true);
+      h+=mkRow('LCB Malaysia Total',D.lcbT,'rs');
+    }
+    if(sub==='all'||sub==='eq'){
+      h+=sepRow('🐎 EQUESTRIAN');
+      Object.entries(D.equestrian).forEach(([k,o])=>h+=mkRow(k,o,'rp',true));
+      h+=mkRow('Equestrian Total',D.eqT,'rs');
+    }
     if(sub==='all'){
-      h+=sep('LV PROGRAMS — OVERVIEW');
-      Object.entries(D.programs).forEach(([n,a])=>h+=row(n,a,'rp'));
-      h+=row('LV Total',D.campuses.LV,'rs');
-    } else if(sub==='js'){
-      h+=sep('JS CAMPS — BAKE LAB (WEEK 1 — KINDY & JS)');
-      ['(Kindy W1) PreK Bake Lab Jr.','(Kindy W1) K1 Bake Lab Jr.','(Kindy W1) K2-3 Bake Lab Jr.','(JS W1) G1-2 Bake Lab','(JS W1) G3-4 Bake Lab','(JS W1) G5-8 Bake Lab'].forEach(k=>h+=row(k,D.js[k],'rp'));
-      h+=sep('JS CAMPS — MOVE LAB (WEEK 2 — KINDY & JS)');
-      ['(Kindy W2) PreK Move Lab Jr.','(Kindy W2) K1 Move Lab Jr.','(Kindy W2) K2-3 Move Lab Jr.','(JS W2) G1-2 Move Lab','(JS W2) G3-4 Move Lab','(JS W2) G5-8 Move Lab'].forEach(k=>h+=row(k,D.js[k],'rp'));
-      h+=sep('JS CAMPS — LIFEWAY VBS');
-      ['Lifeway VBS JR. Pre K','Lifeway VBS JR. K1','Lifeway VBS JR. K2-3','Lifeway VBS JS G1-2','Lifeway VBS JS G3-4','Lifeway VBS JS G5-8'].forEach(k=>h+=row(k,D.js[k],'rp'));
-      h+=row('SPH JS Camps Total',D.jsTotal,'rs');
-    } else if(sub==='ac'){
-      h+=sep('ACADEMIC PREP CAMP');
-      Object.entries(D.academic).forEach(([n,a])=>h+=row(n,a,'rp'));
-      h+=row('SS Academic Prep Total',D.acTotal,'rs');
-    } else if(sub==='sw'){
-      h+=sep('SWIMMING CAMP');
-      Object.entries(D.swimming).forEach(([n,a])=>h+=row(n,a,'rp'));
-      h+=row('Swimming Total',D.swTotal,'rs');
-    } else if(sub==='lcb'){
-      h+=sep('LCB TRIP TO MALAYSIA');
-      Object.entries(D.lcb).forEach(([n,a])=>h+=row(n,a,'rp'));
-      h+=row('LCB Malaysia Total',D.lcbTotal,'rs');
-    } else if(sub==='eq'){
-      h+=sep('EQUESTRIAN');
-      Object.entries(D.equestrian).forEach(([n,a])=>h+=row(n,a,'rp'));
-      h+=row('Equestrian Total',D.eqTotal,'rs');
+      h+=sepRow('LV GRAND TOTAL');
+      h+=mkRow('LV Lippo Village Total',D.campuses.LV,'rs');
     }
   }
-  document.getElementById('tBody').innerHTML=h;
+  document.getElementById('tBd').innerHTML=h;
 }
 
-// ── View / Metric / Sub controls ──────────────────────────
-const VTITLES={total:'Total SPH 2026 vs 2025',campus:'LV vs Other Campuses',vs2025:'LV 2026 vs LV 2025',program:'LV Programs Breakdown'};
-const STNAMES={all:'All Programs',js:'JS Camps — Grade Breakdown',ac:'Academic Prep — Grade Breakdown',sw:'Swimming Camp',lcb:'LCB Trip to Malaysia',eq:'Equestrian (Group & Private)'};
+// ── VIEW / METRIC / SUB ───────────────────────────────────────
+const VT={total:'Total SPH 2026 vs 2025',campus:'LV vs Other Campuses',vs25:'LV 2026 vs LV 2025',prog:'LV Programs Breakdown'};
+const ST={all:'All Programs — Full Grade Breakdown',js:'JS Camps — Grade Detail',ac:'Academic Prep — Grade Detail',sw:'Swimming Camp',lcb:'LCB Trip to Malaysia',eq:'Equestrian (Group & Private)'};
 
 function refresh(){
-  const title=view==='program'?VTITLES[view]+' — '+STNAMES[sub]:VTITLES[view];
-  document.getElementById('chart-title').textContent=title;
-  document.getElementById('tbl-title').textContent=title;
+  const t=view==='prog'?VT[view]+' — '+ST[sub]:VT[view];
+  document.getElementById('ct').textContent=t;
+  document.getElementById('tt').textContent=t;
   renderChart(); renderTable();
 }
 function setView(v){
   view=v;
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('act'));
-  document.getElementById('tab-'+v).classList.add('act');
-  document.getElementById('subRow').classList.toggle('on',v==='program');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('a'));
+  document.getElementById({total:'vt',campus:'vc',vs25:'vv',prog:'vp'}[v]).classList.add('a');
+  document.getElementById('subRow').classList.toggle('on',v==='prog');
   refresh();
 }
 function setMetric(m){
   metric=m;
-  document.querySelectorAll('.tog').forEach(b=>b.classList.remove('act'));
-  document.getElementById('tog-'+m).classList.add('act');
+  document.querySelectorAll('.tob').forEach(b=>b.classList.remove('a'));
+  document.getElementById(m==='cum'?'mc':'mw').classList.add('a');
   refresh();
 }
 function setSub(p){
   sub=p;
-  document.querySelectorAll('.stab').forEach(b=>{ b.classList.remove('act'); b.style.cssText=''; });
-  const btn=document.getElementById('stab-'+p);
-  btn.classList.add('act');
-  btn.style.background=SC_COL[p]; btn.style.color='#fff'; btn.style.borderColor='transparent';
+  document.querySelectorAll('.stab').forEach(b=>{ b.classList.remove('a'); b.style.cssText=''; });
+  const btn=document.getElementById({all:'sa',js:'sj',ac:'sk',sw:'ss',lcb:'sl',eq:'se'}[p]);
+  btn.classList.add('a'); btn.style.background=SC[p]; btn.style.color='#fff'; btn.style.borderColor='transparent';
   refresh();
 }
 
-// ── Modal ─────────────────────────────────────────────────
+// ── MODAL ─────────────────────────────────────────────────────
 function openModal(){
-  const sel=document.getElementById('inp-week');
-  sel.innerHTML='<option value="">Choose week…</option>';
-  D.weeks.forEach((w,i)=>sel.innerHTML+=`<option value="${i}">${w}</option>`);
-  sel.innerHTML+='<option value="new">+ Add new week</option>';
-  document.getElementById('overlay').classList.add('open');
+  const s=document.getElementById('iWk');
+  s.innerHTML='<option value="">Choose week…</option>';
+  D.weeks.forEach((w,i)=>s.innerHTML+=`<option value="${i}">${w}</option>`);
+  s.innerHTML+='<option value="new">+ Add new week</option>';
+  document.getElementById('overlay').classList.add('on');
 }
-function closeModal(){ document.getElementById('overlay').classList.remove('open'); }
+function closeModal(){ document.getElementById('overlay').classList.remove('on'); }
 function prefill(){
-  const idx=parseInt(document.getElementById('inp-week').value);
+  const idx=parseInt(document.getElementById('iWk').value);
   if(isNaN(idx))return;
-  const g=a=>a[idx]!=null?a[idx]:'';
-  document.getElementById('i-lv').value=g(D.campuses.LV);
-  document.getElementById('i-km').value=g(D.campuses.Kemang);
-  document.getElementById('i-pl').value=g(D.campuses.Pluit);
-  document.getElementById('i-sn').value=g(D.campuses.Sentul);
-  const jkeys=Object.keys(D.js);
-  const jids=['i-b-prek','i-b-k1','i-b-k23','i-b-g12','i-b-g34','i-b-g58','i-m-prek','i-m-k1','i-m-k23','i-m-g12','i-m-g34','i-m-g58','i-v-prek','i-v-k1','i-v-k23','i-v-g12','i-v-g34','i-v-g58'];
-  jkeys.forEach((k,i)=>{ if(document.getElementById(jids[i]))document.getElementById(jids[i]).value=g(D.js[k]); });
-  document.getElementById('i-a-78').value=g(D.academic['Acad. Prep Gr7-8 All']);
-  document.getElementById('i-a-910').value=g(D.academic['Acad. Prep Gr9-10 All']);
-  document.getElementById('i-a-1112').value=g(D.academic['Acad. Prep Gr11-12 All']);
-  document.getElementById('i-sw').value=g(D.swimming['Swimming Camp']);
-  document.getElementById('i-lcb').value=g(D.lcb['LCB Trip to Malaysia']);
-  document.getElementById('i-eq-g').value=g(D.equestrian['Equestrian Group']);
-  document.getElementById('i-eq-p').value=g(D.equestrian['Equestrian Private']);
+  const g=a=>a[idx]!==null&&a[idx]!==undefined?a[idx]:'';
+  document.getElementById('iLV').value=g(D.campuses.LV.data);
+  document.getElementById('iKm').value=g(D.campuses.Kemang.data);
+  document.getElementById('iPl').value=g(D.campuses.Pluit.data);
+  document.getElementById('iSn').value=g(D.campuses.Sentul.data);
+  const jKeys=Object.keys(D.js);
+  const jIds=['iBpk','iBk1','iBk23','iBg12','iBg34','iBg58','iMpk','iMk1','iMk23','iMg12','iMg34','iMg58','iVpk','iVk1','iVk23','iVg12','iVg34','iVg58'];
+  jKeys.forEach((k,i)=>{ if(jIds[i])document.getElementById(jIds[i]).value=g(D.js[k].data); });
+  document.getElementById('iA78').value=g(D.academic['Acad. Prep Gr7-8 All'].data);
+  document.getElementById('iA910').value=g(D.academic['Acad. Prep Gr9-10 All'].data);
+  document.getElementById('iA1112').value=g(D.academic['Acad. Prep Gr11-12 All'].data);
+  document.getElementById('iSw').value=g(D.swimming['Swimming Camp'].data);
+  document.getElementById('iLcb').value=g(D.lcb['LCB Trip to Malaysia'].data);
+  document.getElementById('iEqg').value=g(D.equestrian['Equestrian Group'].data);
+  document.getElementById('iEqp').value=g(D.equestrian['Equestrian Private'].data);
 }
 function gv(id){ const v=parseFloat(document.getElementById(id).value); return isNaN(v)?null:v; }
 
 function saveData(){
-  const ws=document.getElementById('inp-week').value;
+  const ws=document.getElementById('iWk').value;
   let idx;
   if(ws==='new'){
-    const lbl=document.getElementById('inp-newwk').value.trim();
+    const lbl=document.getElementById('iNwk').value.trim();
     if(!lbl){alert('Please enter a week label');return;}
     D.weeks.push(lbl);
-    [D.campuses.LV,D.campuses.Kemang,D.campuses.Pluit,D.campuses.Sentul,D.sph2026,D.sph2025,D.jsTotal,D.acTotal,D.swTotal,D.lcbTotal,D.eqTotal,...Object.values(D.programs),...Object.values(D.js),...Object.values(D.academic),...Object.values(D.swimming),...Object.values(D.lcb),...Object.values(D.equestrian)].forEach(a=>a.push(null));
+    const allArrs=[D.campuses.LV,D.campuses.Kemang,D.campuses.Pluit,D.campuses.Sentul,D.sph26,D.sph25,D.jsT,D.acT,D.swT,D.lcbT,D.eqT,...Object.values(D.programs),...Object.values(D.js),...Object.values(D.academic),...Object.values(D.swimming),...Object.values(D.lcb),...Object.values(D.equestrian)];
+    allArrs.forEach(o=>o.data.push(null));
     idx=D.weeks.length-1;
   } else {
     idx=parseInt(ws); if(isNaN(idx)){alert('Please select a week');return;}
   }
-  const lv=gv('i-lv'),km=gv('i-km'),pl=gv('i-pl'),sn=gv('i-sn');
-  if(lv!==null)D.campuses.LV[idx]=lv;
-  if(km!==null)D.campuses.Kemang[idx]=km;
-  if(pl!==null)D.campuses.Pluit[idx]=pl;
-  if(sn!==null)D.campuses.Sentul[idx]=sn;
-  if([lv,km,pl,sn].every(v=>v!==null))D.sph2026[idx]=lv+km+pl+sn;
-
-  const jkeys=Object.keys(D.js);
-  const jids=['i-b-prek','i-b-k1','i-b-k23','i-b-g12','i-b-g34','i-b-g58','i-m-prek','i-m-k1','i-m-k23','i-m-g12','i-m-g34','i-m-g58','i-v-prek','i-v-k1','i-v-k23','i-v-g12','i-v-g34','i-v-g58'];
-  let jsSum=0,allJs=true;
-  jkeys.forEach((k,i)=>{ const v=gv(jids[i]); if(v!==null){D.js[k][idx]=v;jsSum+=v;}else{const cv=D.js[k][idx];cv!==null?jsSum+=cv:allJs=false;} });
-  if(allJs){D.jsTotal[idx]=jsSum;D.programs['JS Camps'][idx]=jsSum;}
-
-  const a78=gv('i-a-78'),a910=gv('i-a-910'),a1112=gv('i-a-1112');
-  if(a78!==null)D.academic['Acad. Prep Gr7-8 All'][idx]=a78;
-  if(a910!==null)D.academic['Acad. Prep Gr9-10 All'][idx]=a910;
-  if(a1112!==null)D.academic['Acad. Prep Gr11-12 All'][idx]=a1112;
-  if([a78,a910,a1112].every(v=>v!==null)){const s=a78+a910+a1112;D.acTotal[idx]=s;D.programs['Academic Prep'][idx]=s;}
-
-  const sw=gv('i-sw');
-  if(sw!==null){D.swimming['Swimming Camp'][idx]=sw;D.swTotal[idx]=sw;D.programs['Swimming'][idx]=sw;}
-  const lcb=gv('i-lcb');
-  if(lcb!==null){D.lcb['LCB Trip to Malaysia'][idx]=lcb;D.lcbTotal[idx]=lcb;D.programs['LCB Malaysia'][idx]=lcb;}
-  const eqg=gv('i-eq-g'),eqp=gv('i-eq-p');
-  if(eqg!==null)D.equestrian['Equestrian Group'][idx]=eqg;
-  if(eqp!==null)D.equestrian['Equestrian Private'][idx]=eqp;
-  if(eqg!==null&&eqp!==null){const s=eqg+eqp;D.eqTotal[idx]=s;D.programs['Equestrian'][idx]=s;}
-
-  localStorage.setItem('sph26',JSON.stringify(D));
-  const ts=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  localStorage.setItem('sph26_ts',ts);
-  document.getElementById('lbl-ts').textContent='Updated: '+ts;
-  closeModal(); updateCards(); refresh();
+  // Campus
+  const lv=gv('iLV'),km=gv('iKm'),pl=gv('iPl'),sn=gv('iSn');
+  if(lv!==null)D.campuses.LV.data[idx]=lv;
+  if(km!==null)D.campuses.Kemang.data[idx]=km;
+  if(pl!==null)D.campuses.Pluit.data[idx]=pl;
+  if(sn!==null)D.campuses.Sentul.data[idx]=sn;
+  if([lv,km,pl,sn].every(v=>v!==null))D.sph26.data[idx]=lv+km+pl+sn;
+  // JS
+  const jKeys=Object.keys(D.js);
+  const jIds=['iBpk','iBk1','iBk23','iBg12','iBg34','iBg58','iMpk','iMk1','iMk23','iMg12','iMg34','iMg58','iVpk','iVk1','iVk23','iVg12','iVg34','iVg58'];
+  let jsS=0,jsOk=true;
+  jKeys.forEach((k,i)=>{
+    const v=gv(jIds[i]);
+    if(v!==null){D.js[k].data[idx]=v;jsS+=v;}
+    else{ const c=D.js[k].data[idx]; c!==null?jsS+=c:jsOk=false; }
+  });
+  if(jsOk){D.jsT.data[idx]=jsS;D.programs['JS Camps'].data[idx]=jsS;}
+  // Academic
+  const a78=gv('iA78'),a910=gv('iA910'),a1112=gv('iA1112');
+  if(a78!==null)D.academic['Acad. Prep Gr7-8 All'].data[idx]=a78;
+  if(a910!==null)D.academic['Acad. Prep Gr9-10 All'].data[idx]=a910;
+  if(a1112!==null)D.academic['Acad. Prep Gr11-12 All'].data[idx]=a1112;
+  if([a78,a910,a1112].every(v=>v!==null)){const s=a78+a910+a1112;D.acT.data[idx]=s;D.programs['Academic Prep'].data[idx]=s;}
+  // Swimming
+  const sw=gv('iSw');
+  if(sw!==null){D.swimming['Swimming Camp'].data[idx]=sw;D.swT.data[idx]=sw;D.programs['Swimming'].data[idx]=sw;}
+  // LCB
+  const lcb=gv('iLcb');
+  if(lcb!==null){D.lcb['LCB Trip to Malaysia'].data[idx]=lcb;D.lcbT.data[idx]=lcb;D.programs['LCB Malaysia'].data[idx]=lcb;}
+  // Equestrian
+  const eqg=gv('iEqg'),eqp=gv('iEqp');
+  if(eqg!==null)D.equestrian['Equestrian Group'].data[idx]=eqg;
+  if(eqp!==null)D.equestrian['Equestrian Private'].data[idx]=eqp;
+  if(eqg!==null&&eqp!==null){const s=eqg+eqp;D.eqT.data[idx]=s;D.programs['Equestrian'].data[idx]=s;}
+  saveD(D); closeModal(); updateCards(); refresh();
 }
 
-// ── Export ─────────────────────────────────────────────────
+// ── EXPORT CSV ───────────────────────────────────────────────
 function exportCSV(){
-  let csv='Program,'+D.weeks.join(',')+'\n';
-  const r=(l,a)=>csv+=`"${l}",`+a.map(v=>v!=null?v:'').join(',')+'\n';
-  Object.entries(D.campuses).forEach(([n,a])=>r(n,a));
-  r('SPH Total 2026',D.sph2026);r('SPH Total 2025',D.sph2025);
-  Object.entries(D.js).forEach(([n,a])=>r(n,a));r('JS Camps Total',D.jsTotal);
-  Object.entries(D.academic).forEach(([n,a])=>r(n,a));r('Academic Total',D.acTotal);
-  r('Swimming Camp',D.swimming['Swimming Camp']);r('LCB Malaysia',D.lcb['LCB Trip to Malaysia']);
-  Object.entries(D.equestrian).forEach(([n,a])=>r(n,a));r('Equestrian Total',D.eqTotal);
-  const blob=new Blob([csv],{type:'text/csv'});
+  const hdr=['Program','2025','Target',...D.weeks,'Latest','% Target'].join(',');
+  const row=(lbl,obj)=>{
+    const lv=lastV(obj.data);
+    const pct=obj.target&&lv?((lv/obj.target)*100).toFixed(1)+'%':'';
+    return`"${lbl}",${obj.y2025??''},${obj.target??''},${obj.data.map(v=>v??'').join(',')},${lv??''},${pct}`;
+  };
+  const lines=[hdr];
+  Object.entries(D.campuses).forEach(([n,o])=>lines.push(row(n,o)));
+  lines.push(row('SPH Total 2026',D.sph26));
+  Object.entries(D.js).forEach(([n,o])=>lines.push(row(n,o)));
+  lines.push(row('JS Camps Total',D.jsT));
+  Object.entries(D.academic).forEach(([n,o])=>lines.push(row(n,o)));
+  lines.push(row('Academic Prep Total',D.acT));
+  lines.push(row('Swimming Camp',D.swimming['Swimming Camp']));
+  lines.push(row('LCB Trip to Malaysia',D.lcb['LCB Trip to Malaysia']));
+  Object.entries(D.equestrian).forEach(([n,o])=>lines.push(row(n,o)));
+  lines.push(row('Equestrian Total',D.eqT));
+  const blob=new Blob([lines.join('\n')],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='SPH_Camp2026.csv';a.click();
 }
 
-// ── Init ───────────────────────────────────────────────────
-const ts=localStorage.getItem('sph26_ts');
+// ── INIT ─────────────────────────────────────────────────────
+const ts=localStorage.getItem('sph26v3_ts');
 document.getElementById('lbl-ts').textContent=ts?'Updated: '+ts:'Data loaded from file';
+// Set initial sub-tab color
+const sa=document.getElementById('sa');
+sa.style.background=SC.all;sa.style.color='#fff';sa.style.borderColor='transparent';
 updateCards();
 setView('total');
-// Set initial sub-tab style
-const sb=document.getElementById('stab-all');
-sb.style.background=SC_COL.all;sb.style.color='#fff';sb.style.borderColor='transparent';
 </script>
 </body>
 </html>
