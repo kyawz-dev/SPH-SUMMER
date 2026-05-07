@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPH Summer Camp 2026 — Registration Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f1f3d;--navy2:#162847;--blue:#1d4ed8;--bl:#3b82f6;
+  --teal:#0d9488;--amber:#d97706;--rose:#e11d48;--violet:#7c3aed;
+  --green:#16a34a;--bg:#f0f4f8;--card:#fff;--brd:#e2e8f0;
+  --txt:#1e293b;--mut:#64748b;--r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+.hdr{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:0 28px;display:flex;align-items:center;justify-content:space-between;min-height:66px;border-bottom:1px solid rgba(255,255,255,.07);flex-wrap:wrap;gap:8px;}
+.hl{display:flex;align-items:center;gap:12px;}
+.logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,var(--bl),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:14px;}
+.hl h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px;}
+.hl p{font-size:11.5px;color:rgba(255,255,255,.45);margin-top:1px;}
+.hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.live{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.45);}
+.dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.btn{border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;border-radius:8px;padding:8px 16px;transition:all .18s;display:flex;align-items:center;gap:5px;}
+.bp{background:var(--bl);color:#fff;}.bp:hover{background:var(--blue);transform:translateY(-1px);}
+.bs{background:rgba(255,255,255,.09);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.14);}
+.bs:hover{background:rgba(255,255,255,.16);}
+.main{max-width:1480px;margin:0 auto;padding:22px 20px;}
+.tr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:18px;}
+.lb{font-size:10.5px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;}
+.tg{display:flex;background:#fff;border:1px solid var(--brd);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap;}
+.tab{padding:6px 14px;border-radius:7px;border:none;background:transparent;color:var(--mut);font-size:12.5px;font-weight:500;cursor:pointer;transition:all .17s;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+.tab.a{background:var(--navy);color:#fff;}
+.tab:not(.a):hover{background:var(--bg);color:var(--txt);}
+.tog{display:flex;background:#fff;border:1px solid var(--brd);border-radius:10px;padding:3px;gap:2px;}
+.tob{padding:6px 12px;border-radius:7px;border:none;background:transparent;color:var(--mut);font-size:12px;font-weight:500;cursor:pointer;transition:all .17s;font-family:'DM Sans',sans-serif;}
+.tob.a{background:var(--teal);color:#fff;}
+.sr{display:none;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px;padding:11px 15px;background:#fff;border:1px solid var(--brd);border-radius:var(--r);border-left:4px solid var(--blue);}
+.sr.on{display:flex;}
+.stab{padding:5px 13px;border-radius:20px;border:1.5px solid var(--brd);background:transparent;color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;transition:all .17s;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+.stab.a{color:#fff!important;border-color:transparent!important;}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}}
+.card{border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;}
+.card .cl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.72;}
+.card .cv{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;margin:6px 0 2px;line-height:1;}
+.card .cs{font-size:11.5px;opacity:.68;}
+.card .ci{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:36px;opacity:.13;}
+.c1{background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;}
+.c2{background:linear-gradient(135deg,#b45309,#d97706);color:#fff;}
+.c3{background:linear-gradient(135deg,#047857,#059669);color:#fff;}
+.c4{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;}
+.sec{background:#fff;border-radius:var(--r);border:1px solid var(--brd);padding:22px;margin-bottom:20px;}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.st{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px;}
+.st::before{content:'';width:4px;height:17px;background:var(--blue);border-radius:2px;}
+.cb{position:relative;height:460px;}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;}
+.li{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--mut);font-weight:500;}
+.ld{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.ts{overflow-x:auto;margin-top:14px;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;white-space:nowrap;}
+thead th{background:var(--navy);color:#fff;padding:8px 10px;text-align:center;font-weight:600;font-size:10px;letter-spacing:.3px;}
+thead th:first-child{text-align:left;position:sticky;left:0;z-index:3;min-width:200px;}
+thead th.c25{background:#1e3a6e;}thead th.ctg{background:#0f5132;}thead th.clt{background:#1e3a6e;min-width:55px;}
+tbody tr:nth-child(even){background:#f8fafc;}
+tbody tr:hover{background:#eff6ff;}
+tbody td{padding:7px 10px;text-align:center;border-bottom:1px solid #f1f5f9;color:var(--txt);}
+tbody td:first-child{text-align:left;position:sticky;left:0;background:inherit;font-weight:500;z-index:1;}
+.rt td{background:var(--navy)!important;color:#fff!important;font-weight:700;font-size:10px;letter-spacing:.5px;padding:6px 10px;}
+.rs{background:#dbeafe!important;}.rs td:first-child{color:var(--blue);font-weight:700;}
+.rp td:first-child{padding-left:18px;color:#374151;}
+.nd{color:#cbd5e1;}
+.fn-box{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:7px 11px;margin-top:6px;font-size:11px;color:#92400e;display:flex;align-items:flex-start;gap:6px;}
+.bn{background:#dcfce7;color:#15803d;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-left:2px;}
+.bd{background:#fee2e2;color:#b91c1c;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-left:2px;}
+td.y25{background:#f0f6ff;color:#1e3a6e;font-weight:600;}td.tgt{background:#f0fdf4;color:#0f5132;font-weight:600;}
+td.pct{font-weight:700;}td.pct.ok{color:var(--green);}td.pct.lo{color:var(--rose);}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.ov.on{display:flex;}
+.mod{background:#fff;border-radius:16px;width:92%;max-width:740px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 25px 60px rgba(0,0,0,.3);}
+.mh{background:var(--navy);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}
+.mh h2{font-family:'Syne',sans-serif;color:#fff;font-size:15px;font-weight:800;}
+.mh p{color:rgba(255,255,255,.45);font-size:11.5px;margin-top:2px;}
+.mx{background:rgba(255,255,255,.1);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
+.mb{padding:20px 22px;overflow-y:auto;flex:1;}
+.mf{padding:14px 22px;border-top:1px solid var(--brd);display:flex;gap:8px;justify-content:flex-end;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+.fg label{font-size:10px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;}
+.fg input,.fg select,.fg textarea{padding:8px 10px;border:1.5px solid var(--brd);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;color:var(--txt);transition:border-color .17s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--bl);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.fs{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;margin:16px 0 10px;padding-bottom:5px;border-bottom:2px solid var(--brd);}
+.bsv{background:var(--blue);color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.bsv:hover{background:var(--navy);}
+.bcn{background:var(--bg);color:var(--mut);border:1px solid var(--brd);padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.tip{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;font-size:11px;color:#0369a1;margin-top:10px;}
+
+/* SPH SECTION */
+#sphNonSphSection{display:none;}
+#sphNonSphSection.on{display:block;}
+
+/* UPLOAD STRIP */
+.upload-strip{background:linear-gradient(135deg,#0f1f3d,#1d4ed8);border-radius:14px;padding:22px 28px;display:flex;align-items:center;gap:20px;margin-bottom:18px;flex-wrap:wrap;box-shadow:0 6px 24px rgba(29,78,216,.22);}
+.us-icon{width:60px;height:60px;border-radius:12px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;cursor:pointer;}
+.us-icon:hover{background:rgba(255,255,255,.2);}
+.us-text{flex:1;min-width:160px;}
+.us-text strong{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;display:block;margin-bottom:3px;}
+.us-text span{font-size:12px;color:rgba(255,255,255,.65);line-height:1.4;}
+.us-text code{background:rgba(255,255,255,.15);color:#fff;padding:1px 5px;border-radius:4px;font-size:11px;}
+.us-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.ubtn{padding:9px 18px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;transition:all .18s;display:flex;align-items:center;gap:6px;}
+.ubtn-primary{background:#fff;color:#1d4ed8;}
+.ubtn-primary:hover{background:#eff6ff;transform:translateY(-1px);}
+.ubtn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.25);}
+.ubtn-ghost:hover{background:rgba(255,255,255,.2);}
+.status-bar{padding:10px 16px;border-radius:10px;font-size:12.5px;font-weight:600;display:none;margin-bottom:16px;}
+.status-bar.ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;}
+.status-bar.err{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;}
+.status-bar.info{background:#eff6ff;color:#1d4ed8;border:1px solid #bcd0fb;}
+
+/* ANALYSIS TABS */
+.atab-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+.atab{padding:8px 18px;border-radius:22px;border:1.5px solid var(--brd);background:#fff;color:var(--mut);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .17s;}
+.atab.a{background:var(--navy);color:#fff;border-color:var(--navy);}
+.atab:not(.a):hover{background:#f3f4f6;color:var(--txt);}
+
+/* CAMPUS TABS */
+.ctab-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.ctab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--brd);background:#fff;color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .17s;}
+.ctab.a{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* PIE CARDS */
+.pie-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
+.pie-card{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:16px;}
+.pie-card h4{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+.pie-wrap{position:relative;height:170px;}
+.pie-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;}
+.pie-center .pnum{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--navy);line-height:1;}
+.pie-center .plbl{font-size:9px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.pie-leg{margin-top:8px;}
+.pie-leg .pli{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mut);margin-bottom:3px;}
+.pie-leg .pld{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* SUMMARY TABLE */
+.sum-tbl{width:100%;border-collapse:collapse;}
+.sum-tbl th{padding:9px 14px;font-size:10px;font-weight:700;letter-spacing:.4px;text-align:center;color:#fff;}
+.sum-tbl th:first-child{text-align:left;background:var(--navy);}
+.sum-tbl th.sh-sph{background:#1d4ed8;}
+.sum-tbl th.sh-non{background:#b45309;}
+.sum-tbl th.sh-tot{background:#374151;}
+.sum-tbl td{padding:9px 14px;text-align:center;border-bottom:1px solid #f1f5f9;font-size:13px;}
+.sum-tbl td:first-child{text-align:left;font-weight:600;font-size:13px;}
+.sum-tbl tr:nth-child(even) td{background:#f8fafc;}
+.sum-tbl tr:hover td{background:#eff6ff;}
+.sum-tbl tr.tot-row td{background:var(--navy)!important;color:#fff!important;font-weight:700;}
+.sph-num{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#1d4ed8;}
+.non-num{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#d97706;}
+.tot-num{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--navy);}
+.ppill{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;}
+.ppill-s{background:#dbeafe;color:#1d4ed8;}
+.ppill-n{background:#fef3c7;color:#92400e;}
+
+/* RANKING */
+.rank-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+@media(max-width:700px){.rank-grid{grid-template-columns:1fr;}}
+.rank-card{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:18px;}
+.rank-card h4{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.rk-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.rk-n{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--mut);width:18px;text-align:center;flex-shrink:0;}
+.rk-name{font-size:12px;font-weight:600;width:130px;flex-shrink:0;line-height:1.3;}
+.rk-bar-bg{flex:1;background:var(--bg);border-radius:5px;height:12px;overflow:hidden;}
+.rk-bar{height:100%;border-radius:5px;transition:width .5s;}
+.rk-bar.b-sph{background:linear-gradient(90deg,#1d4ed8,#60a5fa);}
+.rk-bar.b-non{background:linear-gradient(90deg,#d97706,#fbbf24);}
+.rk-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;width:26px;text-align:right;flex-shrink:0;}
+.rk-pct{font-size:10px;font-weight:700;color:var(--mut);width:34px;text-align:right;flex-shrink:0;}
+
+/* GRADE VIEW */
+.grade-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-bottom:20px;}
+.grade-card{border-radius:var(--r);overflow:hidden;border:1.5px solid #e2e8f0;}
+.gc-header{padding:16px 20px;}
+.gc-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:2px;}
+.gc-sub{font-size:11px;font-weight:500;opacity:.7;}
+.gc-stats{display:flex;gap:20px;margin-top:12px;}
+.gc-stat .gn{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1;}
+.gc-stat .gl{font-size:10px;font-weight:700;text-transform:uppercase;margin-top:2px;}
+.gc-bar-wrap{width:100%;height:8px;background:rgba(255,255,255,.3);border-radius:4px;margin-top:10px;overflow:hidden;display:flex;}
+.gc-bar-sph{height:100%;border-radius:4px 0 0 4px;}
+.gc-bar-non{height:100%;border-radius:0 4px 4px 0;}
+.gc-body{padding:14px 20px;background:#fff;}
+.gc-school-list{display:flex;flex-direction:column;gap:6px;}
+.gc-school-row{display:flex;align-items:center;gap:6px;}
+.gc-school-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;flex-shrink:0;}
+.gb-sph{background:#dbeafe;color:#1d4ed8;}
+.gb-non{background:#fef3c7;color:#b45309;}
+.gc-school-name{font-size:12px;font-weight:600;flex:1;}
+.gc-school-prog{font-size:10px;color:var(--mut);flex-shrink:0;}
+.gc-school-count{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;width:20px;text-align:right;flex-shrink:0;}
+
+/* PROGRAM VIEW */
+.prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:20px;}
+.prog-card{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:16px;}
+.prog-card h4{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.prog-label{font-size:12px;font-weight:600;flex:1;}
+.prog-bar-bg{width:100px;background:var(--bg);border-radius:4px;height:10px;overflow:hidden;flex-shrink:0;}
+.prog-bar{height:100%;border-radius:4px;}
+.prog-count{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;width:24px;text-align:right;flex-shrink:0;}
+.prog-pct{font-size:10px;color:var(--mut);width:30px;text-align:right;flex-shrink:0;}
+
+/* ROSTER */
+.roster-filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.rf-input{flex:1;min-width:180px;padding:8px 12px;border:1.5px solid var(--brd);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+.rf-input:focus{border-color:var(--bl);}
+.rf-sel{padding:8px 12px;border:1.5px solid var(--brd);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:#fff;}
+.sph-badge{display:inline-block;background:#dbeafe;color:#1e3a6e;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;}
+.non-badge{display:inline-block;background:#fef3c7;color:#92400e;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;}
+.del-btn{background:none;border:none;color:#e11d48;cursor:pointer;font-size:14px;padding:2px 5px;border-radius:4px;}
+.del-btn:hover{background:#fee2e2;}
+
+/* IMPORT ZONE */
+.import-zone{border:2.5px dashed #bcd0fb;border-radius:14px;padding:40px 24px;text-align:center;cursor:pointer;transition:all .22s;background:linear-gradient(135deg,#f8fbff,#eff6ff);}
+.import-zone:hover,.import-zone.drag{border-color:var(--bl);background:linear-gradient(135deg,#eff6ff,#dbeafe);}
+.import-zone h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--navy);margin:10px 0 4px;}
+.import-zone p{font-size:12px;color:var(--mut);}
+.fmt-row{display:flex;gap:6px;justify-content:center;margin-top:10px;}
+.fmt-tag{background:#fff;border:1.5px solid #bcd0fb;color:#1d4ed8;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;}
+
+/* NON-SPH school blocks */
+.school-blocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:20px;}
+.school-block{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:16px;}
+.sb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sb-campus{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#92400e;}
+.sb-total{font-size:10px;font-weight:700;color:#b45309;background:#fef3c7;padding:2px 7px;border-radius:10px;}
+.sb-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.sb-rank{font-size:11px;font-weight:800;color:var(--mut);width:16px;text-align:center;flex-shrink:0;}
+.sb-name{font-size:11.5px;font-weight:600;flex:1;line-height:1.3;}
+.sb-bar-bg{width:50px;background:#fef3c7;border-radius:3px;height:7px;overflow:hidden;flex-shrink:0;}
+.sb-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#d97706,#fbbf24);}
+.sb-count{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#92400e;width:18px;text-align:right;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hl">
+    <div class="logo">SP</div>
+    <div><h1>SPH Summer Camp 2026</h1><p>Weekly Registration Monitor · All Campuses</p></div>
+  </div>
+  <div class="hr">
+    <div class="live"><span class="dot"></span><span id="lbl-ts">Data loaded</span></div>
+    <button class="btn bs" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="btn bs" onclick="openSyncModal()" id="btnSync">☁ Sync</button>
+    <button class="btn bp" onclick="openModal()">＋ Update Data</button>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="tr">
+    <span class="lb">View:</span>
+    <div class="tg">
+      <button class="tab a" onclick="setView('total')" id="vt">Total Overview</button>
+      <button class="tab" onclick="setView('campus')" id="vc">By Campuses</button>
+      <button class="tab" onclick="setView('vs25')" id="vv">2026 vs 2025 (LV)</button>
+      <button class="tab" onclick="setView('prog')" id="vp">By Program</button>
+      <button class="tab" onclick="setView('sph')" id="vs">🏫 SPH vs Non-SPH</button>
+    </div>
+    <span class="lb" style="margin-left:8px" id="showMetricLabel">Show:</span>
+    <div class="tog" id="metricToggle">
+      <button class="tob a" onclick="setMetric('cum')" id="mc">Cumulative</button>
+      <button class="tob" onclick="setMetric('wk')" id="mw">New / Week</button>
+    </div>
+  </div>
+
+  <div class="sr" id="subRow">
+    <span class="lb" style="white-space:nowrap">Program:</span>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="stab a" onclick="setSub('all')" id="sa">All Programs</button>
+      <button class="stab" onclick="setSub('js')" id="sj">🏕 JS Camps</button>
+      <button class="stab" onclick="setSub('ac')" id="sk">📚 Academic Prep</button>
+      <button class="stab" onclick="setSub('sw')" id="ss">🏊 Swimming</button>
+      <button class="stab" onclick="setSub('lcb')" id="sl">✈️ LCB Malaysia</button>
+      <button class="stab" onclick="setSub('eq')" id="se">🐎 Equestrian</button>
+    </div>
+  </div>
+  <div class="sr" id="jsSubRow" style="border-left-color:#60a5fa;margin-top:-8px">
+    <span class="lb" style="white-space:nowrap;color:#2563eb">JS Type:</span>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="stab a" onclick="setJsSub('all')" id="jsa" style="background:#2563eb;color:#fff;border-color:transparent">All JS</button>
+      <button class="stab" onclick="setJsSub('bake')" id="jsb">🍳 Bake Lab</button>
+      <button class="stab" onclick="setJsSub('move')" id="jsm">🤸 Move Lab</button>
+      <button class="stab" onclick="setJsSub('vbs')" id="jsv">📖 Lifeway VBS</button>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card c1"><div class="cl">LV Total 2026</div><div class="cv" id="cv-lv">—</div><div class="cs" id="cs-lv">latest week</div><div class="ci">🏕️</div></div>
+    <div class="card c2"><div class="cl">SPH Total 2026</div><div class="cv" id="cv-sph">—</div><div class="cs" id="cs-sph">all campuses</div><div class="ci">🏫</div></div>
+    <div class="card c3"><div class="cl">vs LV 2025 (564)</div><div class="cv" id="cv-pct">—</div><div class="cs" id="cs-pct">progress to 2025 final</div><div class="ci">📈</div></div>
+    <div class="card c4"><div class="cl">New This Week</div><div class="cv" id="cv-new">—</div><div class="cs" id="cs-new">LV new registrations</div><div class="ci">✨</div></div>
+  </div>
+
+  <div id="regChartSection">
+    <div class="sec">
+      <div class="sh"><div class="st" id="ct">Weekly Registration Trend</div></div>
+      <div class="cb"><canvas id="mainChart"></canvas></div>
+      <div class="leg" id="leg"></div>
+    </div>
+    <div class="sec">
+      <div class="sh">
+        <div class="st" id="tt">Registration Detail</div>
+        <div style="font-size:11px;color:var(--mut)">Cumulative · <span style="color:var(--green);font-weight:700">+X</span> = new vs prior · <span style="color:#1e3a6e;font-weight:700">2025</span> = last year · <span style="color:#0f5132;font-weight:700">Target</span></div>
+      </div>
+      <div class="ts"><table><thead id="tHd"></thead><tbody id="tBd"></tbody></table></div>
+      <div class="fn-box" id="vbsNote" style="display:none;margin-top:12px">⚠ <div>Lifeway VBS "2025" figures are not from last year's Summer Camp data.</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SPH vs NON-SPH SECTION
+  ══════════════════════════════════════════ -->
+  <div id="sphNonSphSection">
+
+    <!-- Upload Strip -->
+    <div class="upload-strip">
+      <div class="us-icon" onclick="document.getElementById('qf').click()">📥</div>
+      <div class="us-text">
+        <strong>Upload Master Data File</strong>
+        <span>Upload your <code>All Campus Master Data.xlsx</code> file — reads all campus sheets automatically.<br>
+        Detects <code>School</code>, <code>Grade</code>, <code>Program</code> columns from each sheet tab.</span>
+      </div>
+      <div class="us-actions">
+        <button class="ubtn ubtn-primary" onclick="document.getElementById('qf').click()">⬆ Upload Excel / CSV</button>
+        <button class="ubtn ubtn-ghost" onclick="openManualAddModal()">＋ Add Entry</button>
+        <button class="ubtn ubtn-ghost" style="background:rgba(220,38,38,.25);border-color:rgba(220,38,38,.4)" onclick="clearAll()">🗑 Clear All</button>
+      </div>
+      <input type="file" id="qf" accept=".xlsx,.xls,.csv,.txt" style="display:none" onchange="quickUpload(this)">
+    </div>
+    <div class="status-bar" id="statusBar"></div>
+
+    <!-- Analysis Tabs -->
+    <div class="atab-row">
+      <button class="atab a" onclick="setSphView('overview')" id="atOverview">📊 Overview</button>
+      <button class="atab" onclick="setSphView('grade')" id="atGrade">🎓 By Grade Level</button>
+      <button class="atab" onclick="setSphView('programs')" id="atPrograms">🏕 By Program</button>
+      <button class="atab" onclick="setSphView('roster')" id="atRoster">📋 Full Roster</button>
+    </div>
+
+    <!-- ── OVERVIEW PANEL ── -->
+    <div id="panelOverview">
+      <div class="sec">
+        <div class="sh">
+          <div class="st">School Breakdown</div>
+          <span id="schoolCountLbl" style="font-size:11px;color:var(--mut)"></span>
+        </div>
+        <div class="ctab-row">
+          <button class="ctab a" onclick="setCampus('all')" id="ctAll">All Campuses</button>
+          <button class="ctab" onclick="setCampus('LV')" id="ctLV">📍 Lippo Village</button>
+          <button class="ctab" onclick="setCampus('KV')" id="ctKV">📍 Kemang Village</button>
+          <button class="ctab" onclick="setCampus('SC')" id="ctSC">📍 Sentul City</button>
+          <button class="ctab" onclick="setCampus('PV')" id="ctPV">📍 Pluit Village</button>
+          <button class="ctab" onclick="setCampus('LC')" id="ctLC">📍 LC</button>
+        </div>
+        <div class="pie-grid" id="pieGrid"></div>
+      </div>
+
+      <div class="sec">
+        <div class="sh"><div class="st">Campus Summary</div><div style="font-size:11px;color:var(--mut)">SPH vs Non-SPH per campus</div></div>
+        <div class="ts">
+          <table class="sum-tbl">
+            <thead><tr>
+              <th style="text-align:left;background:var(--navy)">Campus</th>
+              <th class="sh-sph">SPH</th><th class="sh-sph">SPH %</th>
+              <th class="sh-non">Non-SPH</th><th class="sh-non">Non-SPH %</th>
+              <th class="sh-tot">Total</th>
+            </tr></thead>
+            <tbody id="sumTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rank-grid">
+        <div class="rank-card">
+          <h4><span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block"></span> Non-SPH by Campus (High → Low)</h4>
+          <div id="rankNon"></div>
+        </div>
+        <div class="rank-card">
+          <h4><span style="width:10px;height:10px;border-radius:50%;background:#1d4ed8;display:inline-block"></span> SPH by Campus (High → Low)</h4>
+          <div id="rankSph"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sh"><div class="st">Non-SPH Schools by Campus</div><div style="font-size:11px;color:var(--mut)">Ranked by student count</div></div>
+        <div class="school-blocks" id="schoolBlocks"></div>
+      </div>
+    </div>
+
+    <!-- ── GRADE LEVEL PANEL ── -->
+    <div id="panelGrade" style="display:none">
+      <div class="sec">
+        <div class="sh">
+          <div class="st">Grade Level Breakdown</div>
+          <div style="font-size:11px;color:var(--mut)">How many SPH vs Non-SPH students per grade group</div>
+        </div>
+        <p style="font-size:12.5px;color:var(--mut);margin-bottom:16px;line-height:1.6">
+          Students are grouped into <strong>Kindy</strong> (Pre-K, K1, K2, K3 / age ≤6),
+          <strong>Junior School</strong> (Grades 1–8 / age 7–14), and
+          <strong>Senior School</strong> (Grades 9–12 / age ≥15).
+          Each card shows the split and which schools enrolled in each group.
+        </p>
+        <!-- Campus filter for grade view -->
+        <div class="ctab-row" id="gradeCampusTabs">
+          <button class="ctab a" onclick="setGradeCampus('all')" id="gctAll">All Campuses</button>
+          <button class="ctab" onclick="setGradeCampus('LV')" id="gctLV">LV</button>
+          <button class="ctab" onclick="setGradeCampus('KV')" id="gctKV">KV</button>
+          <button class="ctab" onclick="setGradeCampus('SC')" id="gctSC">SC</button>
+          <button class="ctab" onclick="setGradeCampus('PV')" id="gctPV">PV</button>
+        </div>
+        <div class="grade-cards" id="gradeCards"></div>
+      </div>
+    </div>
+
+    <!-- ── PROGRAMS PANEL ── -->
+    <div id="panelPrograms" style="display:none">
+      <div class="sec">
+        <div class="sh">
+          <div class="st">Program Enrollment</div>
+          <div style="font-size:11px;color:var(--mut)">Which programs each school type joins</div>
+        </div>
+        <p style="font-size:12.5px;color:var(--mut);margin-bottom:16px;line-height:1.6">
+          See which summer camp programs are most popular among <strong style="color:#d97706">Non-SPH</strong> vs <strong style="color:#1d4ed8">SPH</strong> students.
+          Use the filter to focus on one group.
+        </p>
+        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+          <button class="ctab a" onclick="setProgFilter('all')" id="pfAll">All Students</button>
+          <button class="ctab" style="border-color:#fde68a" onclick="setProgFilter('Non-SPH')" id="pfNon">Non-SPH Only</button>
+          <button class="ctab" style="border-color:#bcd0fb" onclick="setProgFilter('SPH')" id="pfSph">SPH Only</button>
+        </div>
+        <div class="prog-grid" id="progCards"></div>
+      </div>
+    </div>
+
+    <!-- ── ROSTER PANEL ── -->
+    <div id="panelRoster" style="display:none">
+      <div class="sec">
+        <div class="sh">
+          <div class="st">Full School Roster</div>
+          <span id="rosterCountLbl" style="font-size:11px;color:var(--mut)"></span>
+        </div>
+        <div class="roster-filters">
+          <input class="rf-input" id="rfSearch" type="text" placeholder="🔍 Search school, grade, or program…" oninput="renderRoster()">
+          <select class="rf-sel" id="rfType" onchange="renderRoster()">
+            <option value="all">All Types</option>
+            <option value="SPH">SPH Only</option>
+            <option value="Non-SPH">Non-SPH Only</option>
+          </select>
+          <select class="rf-sel" id="rfCampus" onchange="renderRoster()">
+            <option value="all">All Campuses</option>
+            <option value="LV">LV</option><option value="KV">KV</option>
+            <option value="SC">SC</option><option value="PV">PV</option><option value="LC">LC</option>
+          </select>
+        </div>
+        <div class="ts">
+          <table>
+            <thead><tr>
+              <th style="text-align:left;min-width:180px">School</th>
+              <th>Campus</th><th>Type</th><th>Grade</th><th>Program</th><th></th>
+            </tr></thead>
+            <tbody id="rosterTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end sphNonSphSection -->
+</main>
+
+<!-- SYNC MODAL -->
+<div class="ov" id="syncOverlay">
+  <div class="mod" style="max-width:480px">
+    <div class="mh"><div><h2>☁ Cloud Sync</h2><p>Connect to JSONBin for live sharing</p></div><button class="mx" onclick="closeSyncModal()">✕</button></div>
+    <div class="mb">
+      <div class="g2">
+        <div class="fg" style="grid-column:1/-1"><label>Bin ID</label><input type="text" id="sBinId" style="font-family:monospace;font-size:12px" placeholder="6634abc123def456…"></div>
+        <div class="fg" style="grid-column:1/-1"><label>Master Key</label><input type="password" id="sMasterKey" placeholder="$2a$10$…"></div>
+      </div>
+      <div id="syncStatus" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;font-size:12px"></div>
+    </div>
+    <div class="mf" style="justify-content:space-between;align-items:center">
+      <div style="font-size:11px;color:var(--mut)" id="syncLabel"></div>
+      <div style="display:flex;gap:8px">
+        <button class="bcn" onclick="closeSyncModal()">Close</button>
+        <button class="bsv" onclick="doSync()" id="btnSyncAct">Connect &amp; Push</button>
+        <button class="bsv" style="background:#dc2626;display:none" onclick="disconnectSync()" id="btnDisconn">Disconnect</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UPDATE DATA MODAL -->
+<div class="ov" id="overlay">
+  <div class="mod">
+    <div class="mh"><div><h2>Update Weekly Data</h2><p>Enter cumulative totals for the selected week</p></div><button class="mx" onclick="closeModal()">✕</button></div>
+    <div class="mb">
+      <div class="g2">
+        <div class="fg"><label>Select Week</label><select id="iWk" onchange="prefill()"><option value="">Choose week…</option></select></div>
+        <div class="fg"><label>Or Add New Week</label><input type="text" id="iNwk" placeholder="e.g. 24-Jul"></div>
+      </div>
+      <div class="fs">📍 Campus Totals</div>
+      <div class="g4">
+        <div class="fg"><label>LV Lippo Village</label><input type="number" id="iLV" min="0"></div>
+        <div class="fg"><label>Kemang Village</label><input type="number" id="iKm" min="0"></div>
+        <div class="fg"><label>Pluit Village</label><input type="number" id="iPl" min="0"></div>
+        <div class="fg"><label>Sentul City</label><input type="number" id="iSn" min="0"></div>
+      </div>
+      <div class="fs">🏕️ JS Camps — Bake Lab</div>
+      <div class="g3">
+        <div class="fg"><label>PreK Bake Lab Jr.</label><input type="number" id="iBpk" min="0"></div>
+        <div class="fg"><label>K1 Bake Lab Jr.</label><input type="number" id="iBk1" min="0"></div>
+        <div class="fg"><label>K2-3 Bake Lab Jr.</label><input type="number" id="iBk23" min="0"></div>
+        <div class="fg"><label>G1-2 Bake Lab</label><input type="number" id="iBg12" min="0"></div>
+        <div class="fg"><label>G3-4 Bake Lab</label><input type="number" id="iBg34" min="0"></div>
+        <div class="fg"><label>G5-8 Bake Lab</label><input type="number" id="iBg58" min="0"></div>
+      </div>
+      <div class="fs">🏕️ JS Camps — Move Lab</div>
+      <div class="g3">
+        <div class="fg"><label>PreK Move Lab Jr.</label><input type="number" id="iMpk" min="0"></div>
+        <div class="fg"><label>K1 Move Lab Jr.</label><input type="number" id="iMk1" min="0"></div>
+        <div class="fg"><label>K2-3 Move Lab Jr.</label><input type="number" id="iMk23" min="0"></div>
+        <div class="fg"><label>G1-2 Move Lab</label><input type="number" id="iMg12" min="0"></div>
+        <div class="fg"><label>G3-4 Move Lab</label><input type="number" id="iMg34" min="0"></div>
+        <div class="fg"><label>G5-8 Move Lab</label><input type="number" id="iMg58" min="0"></div>
+      </div>
+      <div class="fs">🏕️ JS Camps — VBS</div>
+      <div class="g3">
+        <div class="fg"><label>VBS Jr. Pre K</label><input type="number" id="iVpk" min="0"></div>
+        <div class="fg"><label>VBS Jr. K1</label><input type="number" id="iVk1" min="0"></div>
+        <div class="fg"><label>VBS Jr. K2-3</label><input type="number" id="iVk23" min="0"></div>
+        <div class="fg"><label>VBS JS G1-2</label><input type="number" id="iVg12" min="0"></div>
+        <div class="fg"><label>VBS JS G3-4</label><input type="number" id="iVg34" min="0"></div>
+        <div class="fg"><label>VBS JS G5-8</label><input type="number" id="iVg58" min="0"></div>
+      </div>
+      <div class="fs">📚 Academic · 🏊 Swimming · ✈️ LCB · 🐎 Equestrian</div>
+      <div class="g4">
+        <div class="fg"><label>Acad. Prep G7-8</label><input type="number" id="iA78" min="0"></div>
+        <div class="fg"><label>Acad. Prep G9-10</label><input type="number" id="iA910" min="0"></div>
+        <div class="fg"><label>Acad. Prep G11-12</label><input type="number" id="iA1112" min="0"></div>
+        <div class="fg"><label>Swimming</label><input type="number" id="iSw" min="0"></div>
+        <div class="fg"><label>LCB Malaysia</label><input type="number" id="iLcb" min="0"></div>
+        <div class="fg"><label>Equestrian Group</label><input type="number" id="iEqg" min="0"></div>
+        <div class="fg"><label>Equestrian Private</label><input type="number" id="iEqp" min="0"></div>
+      </div>
+      <div class="tip">💡 Enter cumulative totals — running total for the whole season.</div>
+    </div>
+    <div class="mf"><button class="bcn" onclick="closeModal()">Cancel</button><button class="bsv" onclick="saveData()">Save &amp; Refresh</button></div>
+  </div>
+</div>
+
+<!-- MANUAL ADD MODAL -->
+<div class="ov" id="addOverlay">
+  <div class="mod" style="max-width:500px">
+    <div class="mh"><div><h2>＋ Add School Entry</h2><p>Manually add one student record</p></div><button class="mx" onclick="closeManualAddModal()">✕</button></div>
+    <div class="mb">
+      <div class="g2">
+        <div class="fg"><label>School Name *</label><input type="text" id="asName" placeholder="e.g. Nord Anglia School"></div>
+        <div class="fg"><label>Campus *</label>
+          <select id="asCampus">
+            <option value="LV">LV – Lippo Village</option><option value="KV">KV – Kemang Village</option>
+            <option value="SC">SC – Sentul City</option><option value="PV">PV – Pluit Village</option><option value="LC">LC</option>
+          </select>
+        </div>
+        <div class="fg"><label>Grade / Age</label><input type="text" id="asGrade" placeholder="e.g. Grade 5 or K2"></div>
+        <div class="fg"><label>Type *</label><select id="asType"><option value="SPH">SPH</option><option value="Non-SPH">Non-SPH</option></select></div>
+      </div>
+      <div class="fg" style="margin-bottom:12px"><label>Program</label><input type="text" id="asProgram" placeholder="e.g. Bake Lab G3-4"></div>
+      <div class="fg" style="margin-bottom:12px"><label>Count</label><input type="number" id="asCount" min="1" value="1"></div>
+    </div>
+    <div class="mf"><button class="bcn" onclick="closeManualAddModal()">Cancel</button><button class="bsv" onclick="saveManual()">Add Entry</button></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// REGISTRATION DATA
+// ══════════════════════════════════════════════════
+var WKS=['10-Apr','17-Apr','24-Apr','1-May','8-May','15-May','22-May','29-May','5-Jun','12-Jun','19-Jun','26-Jun','3-Jul','10-Jul','17-Jul'];
+var NW=WKS.length;
+function na(){return Array(NW).fill(null);}
+function wd(){var a=na();for(var i=0;i<arguments.length;i++)a[i]=arguments[i];return a;}
+
+var DEF_RAW={
+  weeks:WKS.slice(),
+  campuses:{LV:{y2025:564,target:null,data:wd(6,29,32,33)},Kemang:{y2025:80,target:null,data:wd(3,9,11,12)},Pluit:{y2025:99,target:null,data:wd(0,0,1,1)},Sentul:{y2025:53,target:null,data:wd(0,3,6,6)}},
+  sph26:{y2025:null,target:null,data:wd(9,41,50,52)},
+  sph25:{y2025:null,target:null,data:wd(null,46,82,110,196,321,379,492,544,580,651,692,701,755,796)},
+  js:{
+    '(Kindy W1) PreK Bake Lab Jr.':{y2025:7,target:15,data:wd(0,0,0,0)},
+    '(Kindy W1) K1 Bake Lab Jr.':{y2025:22,target:20,data:wd(0,1,1,1)},
+    '(Kindy W1) K2-3 Bake Lab Jr.':{y2025:21,target:22,data:wd(0,0,0,0)},
+    '(JS W1) G1-2 Bake Lab':{y2025:19,target:22,data:wd(0,0,1,1)},
+    '(JS W1) G3-4 Bake Lab':{y2025:20,target:22,data:wd(0,1,1,1)},
+    '(JS W1) G5-8 Bake Lab':{y2025:11,target:20,data:wd(0,2,2,2)},
+    '(Kindy W2) PreK Move Lab Jr.':{y2025:5,target:15,data:wd(0,0,0,0)},
+    '(Kindy W2) K1 Move Lab Jr.':{y2025:16,target:20,data:wd(0,1,1,1)},
+    '(Kindy W2) K2-3 Move Lab Jr.':{y2025:21,target:22,data:wd(0,0,0,0)},
+    '(JS W2) G1-2 Move Lab':{y2025:11,target:22,data:wd(0,0,0,0)},
+    '(JS W2) G3-4 Move Lab':{y2025:14,target:22,data:wd(0,2,2,2)},
+    '(JS W2) G5-8 Move Lab':{y2025:11,target:20,data:wd(0,2,2,2)},
+    'Lifeway VBS JR. Pre K':{y2025:10,target:15,data:wd(0,0,0,0)},
+    'Lifeway VBS JR. K1':{y2025:16,target:20,data:wd(0,0,0,0)},
+    'Lifeway VBS JR. K2-3':{y2025:34,target:20,data:wd(0,0,0,0)},
+    'Lifeway VBS JS G1-2':{y2025:33,target:20,data:wd(0,0,0,0)},
+    'Lifeway VBS JS G3-4':{y2025:26,target:20,data:wd(0,0,0,1)},
+    'Lifeway VBS JS G5-8':{y2025:23,target:20,data:wd(0,1,1,1)}
+  },
+  jsT:{y2025:320,target:357,data:wd(0,10,11,12)},
+  academic:{'Acad. Prep Gr7-8 All':{y2025:14,target:20,data:wd(2,2,2,2)},'Acad. Prep Gr9-10 All':{y2025:19,target:20,data:wd(1,2,2,2)},'Acad. Prep Gr11-12 All':{y2025:5,target:10,data:wd(0,0,0,0)}},
+  acT:{y2025:38,target:50,data:wd(3,4,4,4)},
+  swimming:{'Swimming Camp':{y2025:37,target:40,data:wd(1,4,5,5)}},swT:{y2025:37,target:40,data:wd(1,4,5,5)},
+  lcb:{'LCB Trip to Malaysia':{y2025:12,target:12,data:wd(0,0,0,0)}},lcbT:{y2025:12,target:12,data:wd(0,0,0,0)},
+  equestrian:{'Equestrian Group':{y2025:null,target:40,data:wd(2,7,8,8)},'Equestrian Private':{y2025:null,target:20,data:wd(0,4,4,4)}},
+  eqT:{y2025:null,target:60,data:wd(2,11,12,12)},
+  programs:{'JS Camps':{y2025:320,target:357,data:wd(0,10,11,12)},'Academic Prep':{y2025:38,target:50,data:wd(3,4,4,4)},'Swimming':{y2025:37,target:40,data:wd(1,4,5,5)},'LCB Malaysia':{y2025:12,target:12,data:wd(0,0,0,0)},'Equestrian':{y2025:null,target:60,data:wd(2,11,12,12)}}
+};
+
+// ══════════════════════════════════════════════════
+// DEFAULT SCHOOL DATA — from actual Excel file
+// ══════════════════════════════════════════════════
+var DEF_SCHOOLS=[{"campus": "LV", "school": "SPH PV", "grade": "Grade 7", "type": "SPH", "program": "Academic Prep G7-8", "count": 1}, {"campus": "LV", "school": "SHB", "grade": "Grade 6", "type": "Non-SPH", "program": "Bake Lab G5-8", "count": 1}, {"campus": "LV", "school": "SHB", "grade": "Grade 6", "type": "Non-SPH", "program": "VBS G5-8", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "K1 (Age 3)", "type": "SPH", "program": "Bake Lab Jr. K1", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "K1 (Age 3)", "type": "SPH", "program": "Move Lab Jr. K1", "count": 1}, {"campus": "LV", "school": "Hanoi International School", "grade": "Grade 7", "type": "Non-SPH", "program": "Bake Lab G5-8", "count": 1}, {"campus": "LV", "school": "IPEKA IICS", "grade": "Grade 7", "type": "Non-SPH", "program": "Academic Prep G7-8", "count": 1}, {"campus": "LV", "school": "IPEKA IICS", "grade": "Grade 9", "type": "Non-SPH", "program": "Academic Prep G9-10", "count": 1}, {"campus": "LV", "school": "IPEKA IICS", "grade": "Grade 10", "type": "Non-SPH", "program": "Academic Prep G9-10", "count": 1}, {"campus": "LV", "school": "SMP FRATER", "grade": "Grade 7", "type": "Non-SPH", "program": "Move Lab G5-8", "count": 1}, {"campus": "LV", "school": "Sd KINGDOM ACADEMY", "grade": "Grade 6", "type": "Non-SPH", "program": "Move Lab G5-8", "count": 1}, {"campus": "LV", "school": "Jangseung Elementary School (Korea)", "grade": "Grade 3", "type": "Non-SPH", "program": "Bake Lab G3-4", "count": 1}, {"campus": "LV", "school": "Jangseung Elementary School (Korea)", "grade": "Grade 3", "type": "Non-SPH", "program": "Move Lab G3-4", "count": 1}, {"campus": "LV", "school": "Jakarta Nanyang School", "grade": "Grade 2", "type": "Non-SPH", "program": "Move Lab G3-4", "count": 1}, {"campus": "LV", "school": "Jakarta Nanyang School", "grade": "Grade 2", "type": "Non-SPH", "program": "Bake Lab G1-2", "count": 1}, {"campus": "LV", "school": "IPEKA IICS", "grade": "Grade 4", "type": "Non-SPH", "program": "VBS G3-4", "count": 1}, {"campus": "LV", "school": "Hei Schools Senayan", "grade": "Pre-Kindy (Age 2)", "type": "Non-SPH", "program": "VBS Jr. Pre-K", "count": 1}, {"campus": "LV", "school": "Hei Schools Senayan", "grade": "K3 (Age 5)", "type": "Non-SPH", "program": "VBS Jr. K2-3", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "K2 (Age 4)", "type": "SPH", "program": "VBS Jr. K2-3", "count": 1}, {"campus": "LV", "school": "IPEKA Plus Christian School BSD", "grade": "K3 (Age 5)", "type": "Non-SPH", "program": "VBS Jr. K2-3", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "Grade 2", "type": "SPH", "program": "Bake Lab G1-2", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "Grade 2", "type": "SPH", "program": "Move Lab G1-2", "count": 1}, {"campus": "LV", "school": "Bongmu School (Korea)", "grade": "Grade 2", "type": "Non-SPH", "program": "Bake Lab G1-2", "count": 1}, {"campus": "LV", "school": "Bongmu School (Korea)", "grade": "Grade 2", "type": "Non-SPH", "program": "Move Lab G1-2", "count": 1}, {"campus": "LV", "school": "Bongmu School (Korea)", "grade": "Grade 1", "type": "Non-SPH", "program": "Bake Lab G1-2", "count": 1}, {"campus": "LV", "school": "Bongmu School (Korea)", "grade": "Grade 1", "type": "Non-SPH", "program": "Move Lab G1-2", "count": 1}, {"campus": "LV", "school": "Lentera Kasih", "grade": "Grade 3", "type": "Non-SPH", "program": "VBS G3-4", "count": 1}, {"campus": "LV", "school": "Lentera Kasih", "grade": "Grade 3", "type": "Non-SPH", "program": "VBS G3-4", "count": 1}, {"campus": "LV", "school": "Schooling in Singapore", "grade": "Grade 7", "type": "Non-SPH", "program": "Bake Lab G5-8", "count": 1}, {"campus": "LV", "school": "Schooling in Singapore", "grade": "Grade 5", "type": "Non-SPH", "program": "Bake Lab G5-8", "count": 1}, {"campus": "LV", "school": "IPEKA IICS", "grade": "Grade 3", "type": "Non-SPH", "program": "VBS G1-2", "count": 1}, {"campus": "LV", "school": "Hei School", "grade": "Pre-Kindy (Age 2)", "type": "Non-SPH", "program": "Bake Lab Jr. Pre-K", "count": 1}, {"campus": "LV", "school": "Hei School", "grade": "Pre-Kindy (Age 2)", "type": "Non-SPH", "program": "VBS Jr. Pre-K", "count": 1}, {"campus": "LV", "school": "SHB", "grade": "11 yo", "type": "Non-SPH", "program": "Swimming", "count": 1}, {"campus": "LV", "school": "HIS Hanoi", "grade": "12 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "HIS Hanoi", "grade": "6 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "other school", "grade": "10 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Nord Anglia School", "grade": "6 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Na", "grade": "8 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Na", "grade": "6 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Hei School", "grade": "5 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "4.5 yo", "type": "SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Hei School", "grade": "5 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "West U Elementary", "grade": "6 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Hei School", "grade": "5 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Atisa Dipamkara", "grade": "6 yo", "type": "Non-SPH", "program": "Swimming", "count": 1}, {"campus": "LV", "school": "Atisa Dipamkara", "grade": "6 yo", "type": "Non-SPH", "program": "Swimming", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "3 yo", "type": "SPH", "program": "Swimming", "count": 1}, {"campus": "LV", "school": "Tzu Chi School PIK", "grade": "8.6 yo", "type": "Non-SPH", "program": "Swimming", "count": 1}, {"campus": "LV", "school": "Tzu Chi School PIK", "grade": "7 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Bina Tunas Bangsa School", "grade": "9 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Bina Tunas Bangsa School", "grade": "5.5 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "5 yo", "type": "SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "5 yo", "type": "SPH", "program": "Swimming", "count": 1}, {"campus": "LV", "school": "Tunas Muda Kedoya", "grade": "11 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Tunas Muda Kedoya", "grade": "7 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "7 yo", "type": "SPH", "program": "Swimming", "count": 1}, {"campus": "LV", "school": "Hope Intercultural School", "grade": "5 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "11 yo", "type": "SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "8 yo", "type": "SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "Hei School", "grade": "4 yo", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "LV", "school": "SPH LV", "grade": "5 yo", "type": "SPH", "program": "Swimming", "count": 1}, {"campus": "SC", "school": "Sekolah Bogor Raya", "grade": "K2 (Age 4)", "type": "Non-SPH", "program": "JS Summer Program", "count": 1}, {"campus": "SC", "school": "Sekolah Bogor Raya", "grade": "K3 (Age 5)", "type": "Non-SPH", "program": "JS Summer Program", "count": 1}, {"campus": "SC", "school": "Sekolah Bogor Raya", "grade": "K3 (Age 5)", "type": "Non-SPH", "program": "Equestrian", "count": 1}, {"campus": "SC", "school": "SPH SC", "grade": "Grade 10", "type": "SPH", "program": "Senior School Academic", "count": 1}, {"campus": "SC", "school": "Bogor Montessori School", "grade": "Grade 6", "type": "Non-SPH", "program": "Robotics", "count": 1}, {"campus": "SC", "school": "Bina Bangsa School", "grade": "Grade 12", "type": "Non-SPH", "program": "Coffee Skills", "count": 1}, {"campus": "SC", "school": "SMP Don Bosco III", "grade": "Grade 10", "type": "Non-SPH", "program": "Senior School Academic", "count": 1}, {"campus": "SC", "school": "SPH LV", "grade": "Grade 10", "type": "SPH", "program": "Senior School Academic", "count": 1}, {"campus": "SC", "school": "SMP Montessori Jogjakarta", "grade": "Grade 10", "type": "Non-SPH", "program": "Senior School Academic", "count": 1}, {"campus": "KV", "school": "Nord Anglia School", "grade": "Grade 4", "type": "Non-SPH", "program": "JS English & STEM", "count": 1}, {"campus": "KV", "school": "Nord Anglia School", "grade": "Grade 2", "type": "Non-SPH", "program": "JS English & STEM", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "K3 (Age 5)", "type": "SPH", "program": "Kindy Cooking & Art", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "K2 (Age 4)", "type": "SPH", "program": "Kindy Cooking & Art", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "K2 (Age 4)", "type": "SPH", "program": "JS English & STEM", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "K2 (Age 4)", "type": "SPH", "program": "Kindy Cooking & Art", "count": 1}, {"campus": "KV", "school": "Mentari Intercultural School Jakarta", "grade": "Grade 5", "type": "Non-SPH", "program": "JS English & STEM", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "Grade 5", "type": "SPH", "program": "JS English & STEM", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "Grade 5", "type": "SPH", "program": "JS English & STEM", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "K1 (Age 3)", "type": "SPH", "program": "Kindy Cooking & Art", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "K1 (Age 3)", "type": "SPH", "program": "Kindy Cooking & Art", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "Grade 2", "type": "SPH", "program": "JS English & STEM", "count": 1}, {"campus": "KV", "school": "SPH KV", "grade": "K1 (Age 3)", "type": "SPH", "program": "Kindy Cooking & Art", "count": 1}, {"campus": "PV", "school": "SIS PIK", "grade": "Grade 1", "type": "Non-SPH", "program": "Dance Program", "count": 1}, {"campus": "PV", "school": "BPK Penabur Tasikmalaya", "grade": "Grade 1", "type": "Non-SPH", "program": "STEM Academy Jr.", "count": 1}];
+
+// ── Storage ──────────────────────────────────────────────────
+function loadD(){try{var s=localStorage.getItem('sph26v6');return s?JSON.parse(s):JSON.parse(JSON.stringify(DEF_RAW));}catch(e){return JSON.parse(JSON.stringify(DEF_RAW));}}
+function saveD(d){try{localStorage.setItem('sph26v6',JSON.stringify(d));}catch(e){}var ts=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});try{localStorage.setItem('sph26v6_ts',ts);}catch(e){}document.getElementById('lbl-ts').textContent='Updated: '+ts;}
+function loadSchools(){try{var s=localStorage.getItem('sph26_s3');return s?JSON.parse(s):JSON.parse(JSON.stringify(DEF_SCHOOLS));}catch(e){return JSON.parse(JSON.stringify(DEF_SCHOOLS));}}
+function saveSchools(){try{localStorage.setItem('sph26_s3',JSON.stringify(SCHOOLS));}catch(e){}}
+
+var D=loadD();
+var SCHOOLS=loadSchools();
+var view='total',sub='all',jsSub='all',metric='cum',chart=null;
+var campusView='all',sphView='overview',gradeCampus='all',progFilter='all';
+var pieCharts={};
+
+var CNAMES={LV:'Lippo Village',KV:'Kemang Village',SC:'Sentul City',PV:'Pluit Village',LC:'LC'};
+var CLIST=['LV','KV','SC','PV','LC'];
+
+// ── Helpers ──────────────────────────────────────────────────
+function lastV(a){for(var i=a.length-1;i>=0;i--)if(a[i]!==null)return a[i];return null;}
+function lastI(a){for(var i=a.length-1;i>=0;i--)if(a[i]!==null)return i;return -1;}
+function toWk(a){return a.map(function(v,i){if(v===null)return null;return i===0?v:(a[i-1]===null?v:v-a[i-1]);});}
+function xf(a){return metric==='cum'?a:toWk(a);}
+
+function getSchools(campus){return(!campus||campus==='all')?SCHOOLS:SCHOOLS.filter(function(s){return s.campus===campus;});}
+function buildPie(schools){var sph=0,non=0;schools.forEach(function(s){if(s.type==='SPH')sph+=s.count;else non+=s.count;});return{sph:sph,non:non,total:sph+non};}
+
+function classifyGrade(g){
+  if(!g)return'other';
+  var gl=g.toLowerCase();
+  if(/pre[\s-]?k/i.test(gl)||/kindy/i.test(gl))return'kindy';
+  if(/^k[123]/i.test(gl)||/\(age [2-6]\)/i.test(gl))return'kindy';
+  var am=gl.match(/^(\d+\.?\d*)[\s]*yo/i);
+  if(am){var age=parseFloat(am[1]);if(age<=6)return'kindy';if(age<=14)return'js';return'ss';}
+  var gm=gl.match(/grade\s*(\d+)/i)||gl.match(/^g\s*(\d+)/i);
+  if(gm){var n=parseInt(gm[1]);if(n>=1&&n<=8)return'js';if(n>=9)return'ss';}
+  return'other';
+}
+var GINFO={kindy:{label:'Kindy (Pre-K → K3)',color:'#be185d',bg:'#fce7f3',icon:'🎒'},js:{label:'Junior School (G1–G8)',color:'#1d4ed8',bg:'#dbeafe',icon:'📘'},ss:{label:'Senior School (G9–G12)',color:'#059669',bg:'#dcfce7',icon:'🎓'}};
+
+function isSPH(name){return/^SPH\s/i.test(name)||name==='SPH LV'||name==='SPH KV'||name==='SPH SC'||name==='SPH PV';}
+
+function normalizeName(s){if(!s)return s;var aliases={'sph lippo village':'SPH LV','sph lv':'SPH LV','sph kv':'SPH KV','sph kemang village':'SPH KV','sph sc':'SPH SC','sph sentul city':'SPH SC','sph pv':'SPH PV','sph pluit village':'SPH PV','nord anglila school':'Nord Anglia School','bongmu school in korea':'Bongmu School (Korea)','bpk penabur tasikmalaya':'BPK Penabur Tasikmalaya','bina bangsa school':'Bina Bangsa School','schooling in singapore':'Schooling in Singapore','hei school senayan':'Hei Schools Senayan','hei schools senayan':'Hei Schools Senayan'};return aliases[s.toLowerCase().trim()]||s.trim();}
+
+function showStatus(type,msg){var el=document.getElementById('statusBar');el.className='status-bar '+type;el.textContent=msg;el.style.display='block';if(type==='ok')setTimeout(function(){el.style.display='none';},7000);}
+function clearAll(){if(!confirm('This will clear ALL school data. Continue?'))return;SCHOOLS.length=0;saveSchools();if(view==='sph')renderSph();showStatus('ok','All data cleared.');}
+
+// ── CARDS ─────────────────────────────────────────────────────
+function updateCards(){
+  var lv=lastV(D.campuses.LV.data)||0,sph=lastV(D.sph26.data)||0,li=lastI(D.campuses.LV.data);
+  var nw=li<=0?(D.campuses.LV.data[0]||0):((D.campuses.LV.data[li]||0)-(D.campuses.LV.data[li-1]||0));
+  document.getElementById('cv-lv').textContent=lv;
+  document.getElementById('cs-lv').textContent=li>=0?'week of '+D.weeks[li]:'no data yet';
+  document.getElementById('cv-sph').textContent=sph;
+  document.getElementById('cs-sph').textContent=Object.keys(D.campuses).length+' campuses tracked';
+  document.getElementById('cv-pct').textContent=(lv/564*100).toFixed(1)+'%';
+  document.getElementById('cs-pct').textContent='LV 2025 final: 564';
+  document.getElementById('cv-new').textContent=(nw>=0?'+':'')+nw;
+  document.getElementById('cs-new').textContent=li>=0?'vs week of '+(D.weeks[li-1]||'—'):'LV new registrations';
+}
+
+// ── CHART ─────────────────────────────────────────────────────
+var CC={LV:'#1d4ed8',Kemang:'#d97706',Pluit:'#7c3aed',Sentul:'#0d9488'};
+var PC={'JS Camps':'#3b82f6','Academic Prep':'#f59e0b','Swimming':'#06b6d4','LCB Malaysia':'#8b5cf6','Equestrian':'#10b981'};
+var JC=['#1e40af','#2563eb','#60a5fa','#0d9488','#0f766e','#2dd4bf','#6d28d9','#7c3aed','#a78bfa','#d946ef','#db2777','#b45309','#d97706','#f59e0b','#dc2626','#ef4444','#16a34a','#4ade80'];
+var SC2={all:'#0f1f3d',js:'#2563eb',ac:'#d97706',sw:'#0891b2',lcb:'#7c3aed',eq:'#059669'};
+
+function mkDs(label,obj,color,dashed,fill){var arr=obj.data,t=xf(arr);return{label:label,fill:!!fill,data:arr.map(function(v,i){return v!==null?t[i]:null;}),borderColor:color,backgroundColor:color+'18',borderWidth:2.5,pointRadius:4,pointHoverRadius:6,tension:0.35,spanGaps:false,borderDash:dashed?[6,4]:undefined};}
+function getDS(){
+  if(view==='total')return[mkDs('SPH Total 2026',D.sph26,'#1d4ed8',0,1),mkDs('SPH 2025 (ref.)',D.sph25,'#94a3b8',1,0)];
+  if(view==='campus')return Object.entries(D.campuses).map(function(e,i){return mkDs(e[0],e[1],CC[e[0]]||'#888',0,e[0]==='LV');});
+  if(view==='vs25')return[mkDs('LV 2026',D.campuses.LV,'#1d4ed8',0,1),mkDs('SPH 2025 (ref.)',D.sph25,'#94a3b8',1,0)];
+  var BAKE=['(Kindy W1) PreK Bake Lab Jr.','(Kindy W1) K1 Bake Lab Jr.','(Kindy W1) K2-3 Bake Lab Jr.','(JS W1) G1-2 Bake Lab','(JS W1) G3-4 Bake Lab','(JS W1) G5-8 Bake Lab'];
+  var MOVE=['(Kindy W2) PreK Move Lab Jr.','(Kindy W2) K1 Move Lab Jr.','(Kindy W2) K2-3 Move Lab Jr.','(JS W2) G1-2 Move Lab','(JS W2) G3-4 Move Lab','(JS W2) G5-8 Move Lab'];
+  var VBS=['Lifeway VBS JR. Pre K','Lifeway VBS JR. K1','Lifeway VBS JR. K2-3','Lifeway VBS JS G1-2','Lifeway VBS JS G3-4','Lifeway VBS JS G5-8'];
+  if(sub==='all')return Object.entries(D.programs).map(function(e){return mkDs(e[0],e[1],PC[e[0]]||'#888',0,0);});
+  if(sub==='js'){var keys=jsSub==='bake'?BAKE:jsSub==='move'?MOVE:jsSub==='vbs'?VBS:Object.keys(D.js);var r=keys.map(function(k,i){return mkDs(k,D.js[k],JC[i%JC.length],0,0);});if(jsSub==='all')r.push(mkDs('JS Total',D.jsT,'#1e3a5f',0,0));return r;}
+  if(sub==='ac'){var r=Object.entries(D.academic).map(function(e,i){return mkDs(e[0],e[1],['#1d4ed8','#f59e0b','#10b981'][i],0,0);});r.push(mkDs('Acad Total',D.acT,'#92400e',0,0));return r;}
+  if(sub==='sw')return[mkDs('Swimming',D.swimming['Swimming Camp'],'#06b6d4',0,1)];
+  if(sub==='lcb')return[mkDs('LCB Malaysia',D.lcb['LCB Trip to Malaysia'],'#7c3aed',0,1)];
+  if(sub==='eq'){var r=[mkDs('Eq. Group',D.equestrian['Equestrian Group'],'#10b981',0,0),mkDs('Eq. Private',D.equestrian['Equestrian Private'],'#059669',0,0)];r.push(mkDs('Eq. Total',D.eqT,'#064e3b',0,0));return r;}
+  return[];
+}
+function renderChart(){
+  if(chart)chart.destroy();
+  var isCum=metric==='cum',ds=getDS();
+  var ptPlug={id:'pt',afterDatasetsDraw:function(ch){var ctx=ch.ctx,r=11,mg=r*2+5,by={};ch.data.datasets.forEach(function(ds2,di){var meta=ch.getDatasetMeta(di);ds2.data.forEach(function(v,i){if(v===null||v===undefined||isNaN(v))return;var pt=meta.data[i];if(!pt)return;if(!by[i])by[i]=[];by[i].push({px:pt.x,py:pt.y,v:v,color:ds2.borderColor});});});Object.values(by).forEach(function(g){if(!g.length)return;g.sort(function(a,b){return a.py-b.py;});g.forEach(function(p){p.by=p.py-r-8;});for(var pass=0;pass<30;pass++){var mv=false;for(var i=g.length-2;i>=0;i--){if(g[i+1].by-g[i].by<mg){g[i].by=g[i+1].by-mg;mv=true;}}if(!mv)break;}g.forEach(function(p){ctx.save();var cs=p.by+r+2,ce=p.py-4;if(ce>cs+2){ctx.strokeStyle=p.color+'55';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(p.px,cs);ctx.lineTo(p.px,ce);ctx.stroke();ctx.setLineDash([]);}ctx.beginPath();ctx.arc(p.px,p.by,r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();var lbl=String(p.v);ctx.font='700 '+(lbl.length>3?8:10)+'px DM Sans';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText(lbl,p.px,p.by);ctx.restore();});});}};
+  chart=new Chart(document.getElementById('mainChart').getContext('2d'),{type:'line',data:{labels:D.weeks,datasets:ds},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:80,left:10,right:20}},interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f1f3d',titleFont:{family:'DM Sans',weight:'600'},bodyFont:{family:'DM Sans'},padding:12,cornerRadius:8,callbacks:{label:function(c){var v=c.raw;if(v===null||v===undefined)return'  '+c.dataset.label+': —';return'  '+c.dataset.label+': '+((!isCum&&v>0)?'+':'')+v;}}}},scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{family:'DM Sans',size:10},color:'#94a3b8'},border:{color:'#e2e8f0'}},y:{beginAtZero:true,grid:{color:'#f1f5f9'},ticks:{font:{family:'DM Sans',size:10},color:'#94a3b8'},border:{color:'#e2e8f0'}}}},plugins:[ptPlug]});
+  document.getElementById('leg').innerHTML=ds.map(function(d){return'<div class="li"><span class="ld" style="background:'+d.borderColor+(d.borderDash?';opacity:.5':'')+'"></span>'+d.label+'</div>';}).join('');
+}
+
+// ── TABLE ─────────────────────────────────────────────────────
+function cel(v,prev,isCum){if(v===null)return'<td class="nd">—</td>';var delta=(prev!==null&&prev!==undefined)?v-prev:null;var disp=isCum?v:(delta!==null?delta:v);var badge='';if(isCum&&delta!==null&&delta!==0)badge='<span class="'+(delta>0?'bn':'bd')+'">'+(delta>0?'+':'')+delta+'</span>';return'<td>'+disp+badge+'</td>';}
+function pctCell(v,tgt){if(!v||!tgt)return'<td class="nd">—</td>';var p=(v/tgt*100).toFixed(0);return'<td class="pct '+(parseInt(p)>=80?'ok':'lo')+'">'+p+'%</td>';}
+function mkRow(label,obj,cls,indent){var isCum=metric==='cum',a=obj.data,cells=a.map(function(v,i){return cel(v,i>0?a[i-1]:null,isCum);}).join(''),lv=lastV(a),y25=(obj.y2025!=null)?'<td class="y25">'+obj.y2025+'</td>':'<td class="nd">—</td>',tgt=(obj.target!=null)?'<td class="tgt">'+obj.target+'</td>':'<td class="nd">—</td>';return'<tr class="'+(cls||'')+'"><td'+(indent?' style="padding-left:18px"':'')+'>'+label+'</td>'+y25+tgt+cells+'<td><strong>'+(lv!==null?lv:'—')+'</strong></td>'+pctCell(lv,obj.target)+'</tr>';}
+function sepRow(t){return'<tr class="rt"><td colspan="'+(D.weeks.length+4)+'">'+t+'</td></tr>';}
+function renderTable(){
+  document.getElementById('tHd').innerHTML='<tr><th>Program / Campus</th><th class="c25">2025</th><th class="ctg">Target</th>'+D.weeks.map(function(w){return'<th>'+w+'</th>';}).join('')+'<th class="clt">Latest</th><th class="ctg">%</th></tr>';
+  var h='';
+  if(view==='total'||view==='campus'){h+=sepRow('CAMPUS BREAKDOWN');Object.entries(D.campuses).forEach(function(e){h+=mkRow(e[0],e[1],e[0]==='LV'?'rs':'');});h+=mkRow('SPH Total 2026',D.sph26,'rs');h+=mkRow('SPH Total 2025',D.sph25,'');}
+  else if(view==='vs25'){h+=sepRow('LV 2026 vs SPH 2025');h+=mkRow('LV 2026',D.campuses.LV,'rs');h+=mkRow('SPH 2025 (ref.)',D.sph25,'');}
+  else{
+    var BAKE=['(Kindy W1) PreK Bake Lab Jr.','(Kindy W1) K1 Bake Lab Jr.','(Kindy W1) K2-3 Bake Lab Jr.','(JS W1) G1-2 Bake Lab','(JS W1) G3-4 Bake Lab','(JS W1) G5-8 Bake Lab'];
+    var MOVE=['(Kindy W2) PreK Move Lab Jr.','(Kindy W2) K1 Move Lab Jr.','(Kindy W2) K2-3 Move Lab Jr.','(JS W2) G1-2 Move Lab','(JS W2) G3-4 Move Lab','(JS W2) G5-8 Move Lab'];
+    var VBS=['Lifeway VBS JR. Pre K','Lifeway VBS JR. K1','Lifeway VBS JR. K2-3','Lifeway VBS JS G1-2','Lifeway VBS JS G3-4','Lifeway VBS JS G5-8'];
+    if(sub==='all'||sub==='js'){h+=sepRow('🏕️ JS CAMPS');if(sub==='all'||jsSub==='all'||jsSub==='bake'){h+=sepRow('  ▸ Bake Lab');BAKE.forEach(function(k){h+=mkRow(k,D.js[k],'rp',true);});}if(sub==='all'||jsSub==='all'||jsSub==='move'){h+=sepRow('  ▸ Move Lab');MOVE.forEach(function(k){h+=mkRow(k,D.js[k],'rp',true);});}if(sub==='all'||jsSub==='all'||jsSub==='vbs'){h+=sepRow('  ▸ VBS');VBS.forEach(function(k){h+=mkRow(k,D.js[k],'rp',true);});}h+=mkRow('JS Total',D.jsT,'rs');}
+    if(sub==='all'||sub==='ac'){h+=sepRow('📚 ACADEMIC PREP');Object.entries(D.academic).forEach(function(e){h+=mkRow(e[0],e[1],'rp',true);});h+=mkRow('Acad. Total',D.acT,'rs');}
+    if(sub==='all'||sub==='sw'){h+=sepRow('🏊 SWIMMING');h+=mkRow('Swimming Camp',D.swimming['Swimming Camp'],'rp',true);h+=mkRow('Swimming Total',D.swT,'rs');}
+    if(sub==='all'||sub==='lcb'){h+=sepRow('✈️ LCB MALAYSIA');h+=mkRow('LCB Malaysia',D.lcb['LCB Trip to Malaysia'],'rp',true);h+=mkRow('LCB Total',D.lcbT,'rs');}
+    if(sub==='all'||sub==='eq'){h+=sepRow('🐎 EQUESTRIAN');Object.entries(D.equestrian).forEach(function(e){h+=mkRow(e[0],e[1],'rp',true);});h+=mkRow('Equestrian Total',D.eqT,'rs');}
+    if(sub==='all'){h+=sepRow('LV GRAND TOTAL');h+=mkRow('LV Total',D.campuses.LV,'rs');}
+  }
+  document.getElementById('tBd').innerHTML=h;
+  document.getElementById('vbsNote').style.display=(view==='prog'&&(sub==='all'||sub==='js'))?'flex':'none';
+}
+
+// ══════════════════════════════════════════════════
+// SPH SECTION RENDERING
+// ══════════════════════════════════════════════════
+function renderSph(){
+  var tot=SCHOOLS.reduce(function(a,b){return a+b.count;},0);
+  var sphCount=SCHOOLS.filter(function(s){return s.type==='SPH';}).reduce(function(a,b){return a+b.count;},0);
+  document.getElementById('schoolCountLbl').textContent=SCHOOLS.length+' entries · '+tot+' students (SPH: '+sphCount+', Non-SPH: '+(tot-sphCount)+')';
+  if(sphView==='overview')renderOverview();
+  else if(sphView==='grade')renderGrade();
+  else if(sphView==='programs')renderPrograms();
+  else if(sphView==='roster')renderRoster();
+}
+
+// ── OVERVIEW ──────────────────────────────────────
+function renderOverview(){
+  // Pie charts
+  var pcs=document.querySelectorAll('[data-pie-chart]');
+  pcs.forEach(function(c){try{Chart.getChart(c)&&Chart.getChart(c).destroy();}catch(e){}});
+  var pg=document.getElementById('pieGrid');pg.innerHTML='';
+  if(campusView==='all'){
+    pg.appendChild(mkPie('all','All Campuses',buildPie(SCHOOLS)));
+    CLIST.forEach(function(c){var d=buildPie(getSchools(c));if(d.total>0)pg.appendChild(mkPie(c,CNAMES[c],d));});
+  } else {
+    var card=mkPie(campusView,CNAMES[campusView],buildPie(getSchools(campusView)));
+    card.style.maxWidth='280px';pg.appendChild(card);
+  }
+  // Summary table
+  var campuses=campusView==='all'?CLIST:[campusView];
+  var rows='',tsph=0,tnon=0,tgt=0;
+  campuses.forEach(function(c){var d=buildPie(getSchools(c));if(!d.total&&campusView==='all')return;tsph+=d.sph;tnon+=d.non;tgt+=d.total;rows+='<tr><td>📍 '+CNAMES[c]+'</td><td><span class="sph-num">'+d.sph+'</span></td><td><span class="ppill ppill-s">'+(d.total?Math.round(d.sph/d.total*100):0)+'%</span></td><td><span class="non-num">'+d.non+'</span></td><td><span class="ppill ppill-n">'+(d.total?Math.round(d.non/d.total*100):0)+'%</span></td><td><span class="tot-num">'+d.total+'</span></td></tr>';});
+  rows+='<tr class="tot-row"><td>All Campuses</td><td>'+tsph+'</td><td>'+(tgt?Math.round(tsph/tgt*100):0)+'%</td><td>'+tnon+'</td><td>'+(tgt?Math.round(tnon/tgt*100):0)+'%</td><td>'+tgt+'</td></tr>';
+  document.getElementById('sumTbody').innerHTML=rows;
+  // Rankings
+  var cd=CLIST.map(function(c){var d=buildPie(getSchools(c));return{name:CNAMES[c],sph:d.sph,non:d.non,total:d.total};}).filter(function(d){return d.total>0;});
+  function rkHtml(sorted,type,maxV){return sorted.map(function(d,i){var v=type==='sph'?d.sph:d.non;var pct=d.total?Math.round(v/d.total*100):0;return'<div class="rk-row"><div class="rk-n">'+(i+1)+'</div><div class="rk-name">'+d.name+'</div><div class="rk-bar-bg"><div class="rk-bar b-'+type+'" style="width:'+Math.round(v/(maxV||1)*100)+'%"></div></div><div class="rk-val">'+v+'</div><div class="rk-pct">'+pct+'%</div></div>';}).join('');}
+  var nonR=cd.slice().sort(function(a,b){return b.non-a.non;});
+  var sphR=cd.slice().sort(function(a,b){return b.sph-a.sph;});
+  document.getElementById('rankNon').innerHTML=rkHtml(nonR,'non',nonR[0]?nonR[0].non:1);
+  document.getElementById('rankSph').innerHTML=rkHtml(sphR,'sph',sphR[0]?sphR[0].sph:1);
+  // Non-SPH blocks
+  var campusList=campusView==='all'?CLIST:[campusView];
+  var sb=document.getElementById('schoolBlocks');sb.innerHTML='';
+  campusList.forEach(function(c){
+    var schools=getSchools(c).filter(function(s){return s.type==='Non-SPH';});
+    var agg={};schools.forEach(function(s){var k=s.school||'?';agg[k]=(agg[k]||0)+s.count;});
+    var sorted=Object.entries(agg).sort(function(a,b){return b[1]-a[1];});
+    if(!sorted.length)return;
+    var total=sorted.reduce(function(s,e){return s+e[1];},0),maxV=sorted[0][1]||1;
+    var block=document.createElement('div');block.className='school-block';
+    block.innerHTML='<div class="sb-header"><div class="sb-campus">📍 '+CNAMES[c]+'</div><div class="sb-total">'+total+' students</div></div>'+sorted.map(function(e,i){return'<div class="sb-row"><div class="sb-rank">'+(i+1)+'</div><div class="sb-name">'+e[0]+'</div><div class="sb-bar-bg"><div class="sb-bar" style="width:'+Math.round(e[1]/maxV*100)+'%"></div></div><div class="sb-count">'+e[1]+'</div></div>';}).join('');
+    sb.appendChild(block);
+  });
+}
+
+function mkPie(id,label,data){
+  var div=document.createElement('div');div.className='pie-card';
+  var cid='pc_'+id+'_'+Math.random().toString(36).slice(2);
+  var sp=data.total?Math.round(data.sph/data.total*100):0;
+  var np=data.total?Math.round(data.non/data.total*100):0;
+  div.innerHTML='<h4>'+label+'</h4><div class="pie-wrap"><canvas id="'+cid+'" data-pie-chart="1"></canvas><div class="pie-center"><div class="pnum">'+data.total+'</div><div class="plbl">total</div></div></div><div class="pie-leg"><div class="pli"><span class="pld" style="background:#1d4ed8"></span>SPH — '+data.sph+' ('+sp+'%)</div><div class="pli"><span class="pld" style="background:#f59e0b"></span>Non-SPH — '+data.non+' ('+np+'%)</div></div>';
+  requestAnimationFrame(function(){
+    var c=document.getElementById(cid);if(!c||!data.total){if(c){var ctx=c.getContext('2d');var w=c.offsetWidth||200,h=c.offsetHeight||170;c.width=w;c.height=h;ctx.fillStyle='#94a3b8';ctx.font='12px DM Sans';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('No data yet',w/2,h/2);}return;}
+    var arcLabelPlugin={id:'al_'+cid,afterDatasetsDraw:function(ch){var ctx2=ch.ctx;ch.getDatasetMeta(0).data.forEach(function(arc,i){var v=ch.data.datasets[0].data[i];if(!v)return;var pct=Math.round(v/data.total*100);if(pct<8)return;var angle=arc.startAngle+(arc.endAngle-arc.startAngle)/2,r2=(arc.innerRadius+arc.outerRadius)/2;ctx2.save();ctx2.font="700 11px 'DM Sans'";ctx2.textAlign='center';ctx2.textBaseline='middle';ctx2.fillStyle='#fff';ctx2.shadowColor='rgba(0,0,0,.4)';ctx2.shadowBlur=3;ctx2.fillText(pct+'%',arc.x+Math.cos(angle)*r2,arc.y+Math.sin(angle)*r2);ctx2.restore();});}};
+    new Chart(c.getContext('2d'),{type:'doughnut',data:{labels:['SPH','Non-SPH'],datasets:[{data:[data.sph,data.non],backgroundColor:['#1d4ed8','#f59e0b'],borderColor:['#fff','#fff'],borderWidth:2,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f1f3d',callbacks:{label:function(ctx3){return ctx3.label+': '+ctx3.raw+' ('+Math.round(ctx3.raw/data.total*100)+'%)'}}}}},plugins:[arcLabelPlugin]});
+  });
+  return div;
+}
+
+// ── GRADE BREAKDOWN ───────────────────────────────
+function renderGrade(){
+  var schools=gradeCampus==='all'?SCHOOLS:getSchools(gradeCampus);
+  var gdata={kindy:{sph:[],non:[]},js:{sph:[],non:[]},ss:{sph:[],non:[]}};
+  schools.forEach(function(s){var gl=classifyGrade(s.grade);if(!gdata[gl])return;gdata[gl][s.type==='SPH'?'sph':'non'].push(s);});
+  var html='';
+  ['kindy','js','ss'].forEach(function(gl){
+    var gd=gdata[gl],inf=GINFO[gl];
+    var sphCount=gd.sph.reduce(function(a,b){return a+b.count;},0);
+    var nonCount=gd.non.reduce(function(a,b){return a+b.count;},0);
+    var total=sphCount+nonCount;if(!total)return;
+    var sp=Math.round(sphCount/total*100);
+    // Aggregate unique school counts
+    var sphAgg={},nonAgg={};
+    gd.sph.forEach(function(s){var k=s.school;if(!sphAgg[k])sphAgg[k]={count:0,programs:[]};sphAgg[k].count+=s.count;sphAgg[k].programs.push(s.program);});
+    gd.non.forEach(function(s){var k=s.school;if(!nonAgg[k])nonAgg[k]={count:0,programs:[]};nonAgg[k].count+=s.count;nonAgg[k].programs.push(s.program);});
+    var sphList=Object.entries(sphAgg).sort(function(a,b){return b[1].count-a[1].count;});
+    var nonList=Object.entries(nonAgg).sort(function(a,b){return b[1].count-a[1].count;});
+    function schoolRows(list,type){return list.map(function(e){var progs=[...new Set(e[1].programs)].join(', ');return'<div class="gc-school-row"><span class="gc-school-badge '+(type==='sph'?'gb-sph':'gb-non')+'">'+(type==='sph'?'SPH':'Non-SPH')+'</span><span class="gc-school-name">'+e[0]+'</span><span class="gc-school-prog" style="max-width:160px;overflow:hidden;text-overflow:ellipsis">'+progs+'</span><span class="gc-school-count">'+(e[1].count>1?'×'+e[1].count:'')+'</span></div>';}).join('');}
+    html+='<div class="grade-card"><div class="gc-header" style="background:'+inf.bg+'">'
+      +'<div class="gc-title" style="color:'+inf.color+'">'+inf.icon+' '+inf.label+'</div>'
+      +'<div class="gc-sub" style="color:'+inf.color+'">'+total+' students total</div>'
+      +'<div class="gc-stats"><div class="gc-stat"><div class="gn" style="color:#1d4ed8">'+sphCount+'</div><div class="gl" style="color:#1d4ed8">SPH ('+sp+'%)</div></div>'
+      +'<div class="gc-stat"><div class="gn" style="color:#d97706">'+(total-sphCount)+'</div><div class="gl" style="color:#d97706">Non-SPH ('+(100-sp)+'%)</div></div></div>'
+      +'<div class="gc-bar-wrap"><div class="gc-bar-sph" style="width:'+sp+'%;background:linear-gradient(90deg,#1d4ed8,#60a5fa)"></div><div class="gc-bar-non" style="width:'+(100-sp)+'%;background:linear-gradient(90deg,#d97706,#fbbf24)"></div></div>'
+      +'</div><div class="gc-body"><div class="gc-school-list">'+schoolRows(nonList,'non')+schoolRows(sphList,'sph')+'</div></div></div>';
+  });
+  document.getElementById('gradeCards').innerHTML=html||'<div style="padding:20px;color:var(--mut);text-align:center">No data for this campus yet. Upload your Excel file above.</div>';
+}
+
+// ── PROGRAMS ──────────────────────────────────────
+function renderPrograms(){
+  var schools=SCHOOLS.slice();
+  if(progFilter!=='all')schools=schools.filter(function(s){return s.type===progFilter;});
+  // Count by program
+  var pc={};
+  schools.forEach(function(s){var p=s.program||'—';if(p==='—')return;pc[p]=(pc[p]||0)+s.count;});
+  var sorted=Object.entries(pc).sort(function(a,b){return b[1]-a[1];});
+  var maxV=sorted[0]?sorted[0][1]:1;
+  // Color per program category
+  function pColor(p){var pl=p.toLowerCase();if(pl.includes('bake'))return'#d97706';if(pl.includes('move'))return'#0891b2';if(pl.includes('vbs'))return'#7c3aed';if(pl.includes('academic')||pl.includes('senior'))return'#1d4ed8';if(pl.includes('swimming'))return'#06b6d4';if(pl.includes('equestrian'))return'#10b981';if(pl.includes('stem'))return'#f59e0b';if(pl.includes('english'))return'#3b82f6';if(pl.includes('kindy'))return'#be185d';if(pl.includes('robotics'))return'#059669';if(pl.includes('coffee'))return'#b45309';if(pl.includes('dance'))return'#e11d48';if(pl.includes('js summer')||pl.includes('summer'))return'#0d9488';return'#64748b';}
+  // Split into SPH vs Non-SPH per program
+  var progBreak={};
+  SCHOOLS.forEach(function(s){var p=s.program||'—';if(p==='—')return;if(!progBreak[p])progBreak[p]={sph:0,non:0};if(s.type==='SPH')progBreak[p].sph+=s.count;else progBreak[p].non+=s.count;});
+  var html='';
+  sorted.forEach(function(e){
+    var prog=e[0],count=e[1],pb=progBreak[prog]||{sph:0,non:0};
+    var sphPct=count?Math.round(pb.sph/count*100):0;
+    html+='<div class="prog-card"><div class="prog-row"><div class="prog-label">'+prog+'</div><div class="prog-bar-bg"><div class="prog-bar" style="width:'+Math.round(count/maxV*100)+'%;background:'+pColor(prog)+'"></div></div><div class="prog-count" style="color:'+pColor(prog)+'">'+count+'</div></div>'
+      +'<div style="display:flex;gap:6px;margin-top:6px;align-items:center">'
+      +'<div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;display:flex"><div style="width:'+sphPct+'%;background:#1d4ed8;height:100%"></div><div style="width:'+(100-sphPct)+'%;background:#f59e0b;height:100%"></div></div>'
+      +'<span style="font-size:10px;color:#1d4ed8;font-weight:700">'+pb.sph+' SPH</span><span style="font-size:10px;color:#d97706;font-weight:700">'+pb.non+' Non-SPH</span>'
+      +'</div></div>';
+  });
+  // By campus
+  var campusProgHtml='<div class="prog-card"><h4><span style="width:10px;height:10px;border-radius:50%;background:#1d4ed8;display:inline-block"></span> By Campus</h4>';
+  CLIST.forEach(function(c){
+    var cs=getSchools(c);if(!cs.length)return;
+    var cp={};cs.forEach(function(s){var p=s.program||'—';if(p==='—')return;cp[p]=(cp[p]||0)+s.count;});
+    var ct=Object.values(cp).reduce(function(a,b){return a+b;},0);
+    var topP=Object.entries(cp).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
+    campusProgHtml+='<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f1f5f9"><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px">📍 '+CNAMES[c]+' <span style="color:var(--mut);font-weight:400">('+ct+' enrollments)</span></div>'+topP.map(function(e){return'<div class="prog-row" style="margin-bottom:4px"><div class="prog-label" style="font-size:11px">'+e[0]+'</div><div class="prog-bar-bg" style="width:60px"><div class="prog-bar" style="width:'+Math.round(e[1]/ct*100)+'%;background:'+pColor(e[0])+'"></div></div><div class="prog-count" style="font-size:11px;color:'+pColor(e[0])+'">'+e[1]+'</div></div>';}).join('')+'</div>';
+  });
+  campusProgHtml+='</div>';
+  document.getElementById('progCards').innerHTML=html+campusProgHtml;
+}
+
+// ── ROSTER ────────────────────────────────────────
+function renderRoster(){
+  var search=(document.getElementById('rfSearch')?document.getElementById('rfSearch').value:'').toLowerCase();
+  var typeF=document.getElementById('rfType')?document.getElementById('rfType').value:'all';
+  var campF=document.getElementById('rfCampus')?document.getElementById('rfCampus').value:'all';
+  var list=SCHOOLS.slice();
+  if(campF!=='all')list=list.filter(function(s){return s.campus===campF;});
+  if(typeF!=='all')list=list.filter(function(s){return s.type===typeF;});
+  if(search)list=list.filter(function(s){return(s.school||'').toLowerCase().includes(search)||(s.grade||'').toLowerCase().includes(search)||(s.program||'').toLowerCase().includes(search);});
+  var tot=list.reduce(function(a,b){return a+b.count;},0);
+  document.getElementById('rosterCountLbl').textContent=list.length+' entries · '+tot+' students';
+  var tb=document.getElementById('rosterTbody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:20px">No entries found. Upload your Excel file or add entries manually.</td></tr>';return;}
+  tb.innerHTML=list.map(function(s){
+    var gi=SCHOOLS.indexOf(s);
+    return'<tr><td>'+(s.school||'—')+'</td><td style="font-size:10px;font-weight:700;color:var(--mut)">'+s.campus+'</td><td>'+(s.type==='SPH'?'<span class="sph-badge">SPH</span>':'<span class="non-badge">Non-SPH</span>')+'</td><td>'+(s.grade||'—')+'</td><td style="max-width:140px;white-space:normal;font-size:11px">'+(s.program||'—')+'</td><td><button class="del-btn" onclick="delSchool('+gi+')">✕</button></td></tr>';
+  }).join('');
+}
+
+function delSchool(idx){if(!confirm('Remove this entry?'))return;SCHOOLS.splice(idx,1);saveSchools();renderSph();}
+
+// ══════════════════════════════════════════════════
+// EXCEL / CSV UPLOAD — Working parser
+// ══════════════════════════════════════════════════
+function shortProg(c){
+  if(!c)return'—';var cl=c.toLowerCase();
+  if(cl.includes('optional')||cl.includes('optional lunch'))return null;
+  if(cl.includes('bake lab jr')&&cl.includes('pre'))return'Bake Lab Jr. Pre-K';
+  if(cl.includes('bake lab jr')&&cl.includes('k1'))return'Bake Lab Jr. K1';
+  if(cl.includes('bake lab jr')&&(cl.includes('k2')||cl.includes('k3')))return'Bake Lab Jr. K2-3';
+  if(cl.includes('bake lab')&&cl.includes('g1'))return'Bake Lab G1-2';
+  if(cl.includes('bake lab')&&cl.includes('g3'))return'Bake Lab G3-4';
+  if(cl.includes('bake lab')&&(cl.includes('g5')||cl.includes('g7')||cl.includes('g8')))return'Bake Lab G5-8';
+  if(cl.includes('move lab jr')&&cl.includes('pre'))return'Move Lab Jr. Pre-K';
+  if(cl.includes('move lab jr')&&cl.includes('k1'))return'Move Lab Jr. K1';
+  if(cl.includes('move lab jr')&&(cl.includes('k2')||cl.includes('k3')))return'Move Lab Jr. K2-3';
+  if(cl.includes('move lab')&&cl.includes('g1'))return'Move Lab G1-2';
+  if(cl.includes('move lab')&&cl.includes('g3'))return'Move Lab G3-4';
+  if(cl.includes('move lab')&&(cl.includes('g5')||cl.includes('g6')||cl.includes('g8')))return'Move Lab G5-8';
+  if(cl.includes('vbs jr')&&cl.includes('pre'))return'VBS Jr. Pre-K';
+  if(cl.includes('vbs jr')&&cl.includes('k1'))return'VBS Jr. K1';
+  if(cl.includes('vbs jr')&&(cl.includes('k2')||cl.includes('k3')))return'VBS Jr. K2-3';
+  if(cl.includes('vbs')&&(cl.includes('g1')||cl.includes('1 - 2')))return'VBS G1-2';
+  if(cl.includes('vbs')&&(cl.includes('g3')||cl.includes('3 - 4')))return'VBS G3-4';
+  if(cl.includes('vbs')&&(cl.includes('g5')||cl.includes('5 - 8')))return'VBS G5-8';
+  if(cl.includes('academic preparation')&&cl.includes('g7'))return'Academic Prep G7-8';
+  if(cl.includes('academic preparation')&&cl.includes('g9'))return'Academic Prep G9-10';
+  if(cl.includes('senior school academic'))return'Senior School Academic';
+  if(cl.includes('swimming'))return'Swimming';
+  if(cl.includes('equine')||cl.includes('equestrian'))return'Equestrian';
+  if(cl.includes('lcb')||cl.includes('malaysia'))return'LCB Malaysia';
+  if(cl.includes('english')&&cl.includes('stem'))return'JS English & STEM';
+  if(cl.includes('junior school summer'))return'JS Summer Program';
+  if(cl.includes('kindy cooking'))return'Kindy Cooking & Art';
+  if(cl.includes('robotics'))return'Robotics';
+  if(cl.includes('coffee'))return'Coffee Skills';
+  if(cl.includes('dance')||cl.includes('hip hop'))return'Dance Program';
+  if(cl.includes('stem academy'))return'STEM Academy Jr.';
+  var name=c.split(' ~ ')[0].split(' - ')[0].trim();
+  return name.length>40?name.slice(0,38)+'…':name;
+}
+
+function campusFromSheet(name){
+  var s=name.toUpperCase().trim();
+  if(s.includes('KV')||s.includes('KEMANG'))return'KV';
+  if(s.includes('SC')||s.includes('SENTUL'))return'SC';
+  if(s.includes('PV')||s.includes('PLUIT'))return'PV';
+  if(s.includes('LC'))return'LC';
+  if(s.includes('LV')||s.includes('LIPPO'))return'LV';
+  return null; // skip non-campus sheets
+}
+
+function parseExcel(buf){
+  var wb=XLSX.read(buf,{type:'array'});
+  var results=[];
+  wb.SheetNames.forEach(function(sheetName){
+    var campus=campusFromSheet(sheetName);
+    if(!campus)return; // skip Dashboard, Summary etc
+    var ws=wb.Sheets[sheetName];
+    var rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+    if(!rows||rows.length<2)return;
+    // Find header row (look for 'school' or 'grade' keyword, up to row 5)
+    var hdrIdx=0,hdr=rows[0];
+    for(var ri=0;ri<Math.min(5,rows.length);ri++){
+      var joined=rows[ri].map(function(c){return String(c).toLowerCase();}).join(' ');
+      if(joined.includes('school')||joined.includes('grade')){hdrIdx=ri;hdr=rows[ri];break;}
+    }
+    // Find columns — search headers first, then fall back to known indices for this file format
+    var schoolCol=-1,gradeCol=-1,courseCol=-1;
+    for(var ci=0;ci<hdr.length;ci++){
+      var h=String(hdr[ci]).toLowerCase().trim();
+      if((h.includes('school')&&!h.includes('course'))||h==='ak')schoolCol=ci;
+      if(h.includes('grade')||h==='al')gradeCol=ci;
+      if(h.includes('registered course')||h.includes('course')||h==='s')courseCol=ci;
+    }
+    // Fallback to known column indices for the All Campus Master Data format
+    if(schoolCol<0)schoolCol=4;   // col E = AK = School
+    if(gradeCol<0)gradeCol=5;     // col F = AL = Grade
+    if(courseCol<0)courseCol=14;  // col O = S = Registered Course
+    for(var ri=hdrIdx+1;ri<rows.length;ri++){
+      var row=rows[ri];
+      if(!row||!row[0])continue;
+      // Must start with Inv- to be a valid registration row
+      var orderId=String(row[0]||'').trim();
+      if(!orderId.startsWith('Inv'))continue;
+      var rawSchool=String(row[schoolCol]||'').trim();
+      var grade=String(row[gradeCol]||'').trim();
+      var course=String(row[courseCol]||'').trim();
+      if(!rawSchool||rawSchool.toLowerCase()==='none'||rawSchool.length<2)continue;
+      var school=normalizeName(rawSchool);
+      var prog=shortProg(course);
+      if(prog===null)continue; // skip optional lunch rows
+      results.push({campus:campus,school:school,grade:grade,type:isSPH(school)?'SPH':'Non-SPH',program:prog||'—',count:1});
+    }
+  });
+  return results;
+}
+
+function parseCSV(text){
+  var lines=text.split(/\r?\n/).filter(function(l){return l.trim();});if(!lines.length)return[];
+  var delim=lines[0].includes('\t')?'\t':',';
+  var hdrs=lines[0].split(delim).map(function(h){return h.trim().toLowerCase().replace(/['"]/g,'');});
+  var si=hdrs.findIndex(function(h){return h.includes('school')||h==='ak';}),gi=hdrs.findIndex(function(h){return h.includes('grade')||h==='al';}),ci=hdrs.findIndex(function(h){return h.includes('campus');}),ti=hdrs.findIndex(function(h){return h.includes('type');}),pi=hdrs.findIndex(function(h){return h.includes('program')||h.includes('course');});
+  var start=si>=0?1:0;
+  return lines.slice(start).map(function(l){
+    var cols=l.split(delim).map(function(c){return c.trim().replace(/['"]/g,'');});
+    var raw=si>=0?cols[si]:cols[0];if(!raw||raw.length<2)return null;
+    var school=normalizeName(raw);
+    return{school:school,grade:gi>=0?cols[gi]:'',campus:ci>=0?(cols[ci]||'LV'):'LV',type:ti>=0?cols[ti]:(isSPH(school)?'SPH':'Non-SPH'),program:pi>=0?cols[pi]:'—',count:1};
+  }).filter(Boolean);
+}
+
+function quickUpload(input){
+  var file=input.files[0];if(!file)return;
+  showStatus('info','⏳ Reading "'+file.name+'"…');
+  var isXl=file.name.match(/\.xlsx?$/i);
+  var reader=new FileReader();
+  reader.onerror=function(){showStatus('err','❌ Could not read the file.');};
+  if(isXl){
+    reader.onload=function(e){
+      try{
+        var rows=parseExcel(e.target.result);
+        if(!rows.length){showStatus('err','⚠️ No valid registration rows found. Make sure the file has columns: School, Grade, and a Registered Course column.');return;}
+        // Replace existing data with fresh upload
+        SCHOOLS.length=0;
+        rows.forEach(function(r){SCHOOLS.push(r);});
+        saveSchools();if(view==='sph')renderSph();
+        var camps=[...new Set(rows.map(function(r){return r.campus;}))].join(', ');
+        var sphN=rows.filter(function(r){return r.type==='SPH';}).length;
+        var nonN=rows.length-sphN;
+        showStatus('ok','✅ Loaded '+rows.length+' registration records from campuses: '+camps+' (SPH: '+sphN+', Non-SPH: '+nonN+')');
+      }catch(err){showStatus('err','❌ Error reading Excel: '+err.message);console.error(err);}
+    };
+    reader.readAsArrayBuffer(file);
+  }else{
+    reader.onload=function(e){
+      var rows=parseCSV(e.target.result);
+      SCHOOLS.length=0;rows.forEach(function(r){SCHOOLS.push(r);});saveSchools();
+      if(view==='sph')renderSph();
+      showStatus('ok','✅ Loaded '+rows.length+' entries from "'+file.name+'"');
+    };
+    reader.readAsText(file);
+  }
+  input.value='';
+}
+
+// Manual add
+function openManualAddModal(){document.getElementById('asName').value='';document.getElementById('asGrade').value='';document.getElementById('asCount').value='1';document.getElementById('asProgram').value='';document.getElementById('addOverlay').classList.add('on');setTimeout(function(){document.getElementById('asName').focus();},100);}
+function closeManualAddModal(){document.getElementById('addOverlay').classList.remove('on');}
+function saveManual(){
+  var name=document.getElementById('asName').value.trim();if(!name)return;
+  var school=normalizeName(name);
+  SCHOOLS.push({campus:document.getElementById('asCampus').value,school:school,grade:document.getElementById('asGrade').value.trim()||'—',type:document.getElementById('asType').value,program:document.getElementById('asProgram').value.trim()||'—',count:parseInt(document.getElementById('asCount').value)||1});
+  saveSchools();closeManualAddModal();if(view==='sph')renderSph();
+  showStatus('ok','✅ Added: '+school);
+}
+
+// ── VIEW / STATE ──────────────────────────────────
+function setView(v){
+  view=v;
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('a');});
+  var m={total:'vt',campus:'vc',vs25:'vv',prog:'vp',sph:'vs'};
+  if(document.getElementById(m[v]))document.getElementById(m[v]).classList.add('a');
+  document.getElementById('subRow').classList.toggle('on',v==='prog');
+  if(v!=='prog'){document.getElementById('jsSubRow').classList.remove('on');jsSub='all';}
+  var isSph=(v==='sph');
+  document.getElementById('regChartSection').style.display=isSph?'none':'block';
+  document.getElementById('sphNonSphSection').classList.toggle('on',isSph);
+  document.getElementById('showMetricLabel').style.display=isSph?'none':'';
+  document.getElementById('metricToggle').style.display=isSph?'none':'';
+  if(isSph)setTimeout(renderSph,50);else refresh();
+}
+function setMetric(m){metric=m;document.querySelectorAll('.tob').forEach(function(b){b.classList.remove('a');});document.getElementById(m==='cum'?'mc':'mw').classList.add('a');refresh();}
+function setSub(p){
+  sub=p;document.querySelectorAll('.stab').forEach(function(b){b.classList.remove('a');b.style.cssText='';});
+  var m={all:'sa',js:'sj',ac:'sk',sw:'ss',lcb:'sl',eq:'se'};
+  var btn=document.getElementById(m[p]);btn.classList.add('a');btn.style.background=SC2[p];btn.style.color='#fff';btn.style.borderColor='transparent';
+  document.getElementById('jsSubRow').classList.toggle('on',p==='js');if(p!=='js')jsSub='all';refresh();
+}
+function setJsSub(p){
+  jsSub=p;['jsa','jsb','jsm','jsv'].forEach(function(id){var b=document.getElementById(id);b.classList.remove('a');b.style.cssText='';});
+  var m={all:'jsa',bake:'jsb',move:'jsm',vbs:'jsv'};var btn=document.getElementById(m[p]);btn.classList.add('a');btn.style.background='#2563eb';btn.style.color='#fff';btn.style.borderColor='transparent';refresh();
+}
+function setSphView(v){
+  sphView=v;
+  document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('a');});
+  var m={overview:'atOverview',grade:'atGrade',programs:'atPrograms',roster:'atRoster'};
+  if(document.getElementById(m[v]))document.getElementById(m[v]).classList.add('a');
+  ['Overview','Grade','Programs','Roster'].forEach(function(p){var el=document.getElementById('panel'+p);if(el)el.style.display=(p.toLowerCase()===v)?'block':'none';});
+  renderSph();
+}
+function setCampus(c){
+  campusView=c;
+  document.querySelectorAll('.ctab-row:not(#gradeCampusTabs) .ctab').forEach(function(b){b.classList.remove('a');});
+  var m={all:'ctAll',LV:'ctLV',KV:'ctKV',SC:'ctSC',PV:'ctPV',LC:'ctLC'};
+  if(document.getElementById(m[c]))document.getElementById(m[c]).classList.add('a');
+  renderSph();
+}
+function setGradeCampus(c){
+  gradeCampus=c;
+  document.querySelectorAll('#gradeCampusTabs .ctab').forEach(function(b){b.classList.remove('a');});
+  var m={all:'gctAll',LV:'gctLV',KV:'gctKV',SC:'gctSC',PV:'gctPV'};
+  if(document.getElementById(m[c]))document.getElementById(m[c]).classList.add('a');
+  renderGrade();
+}
+function setProgFilter(f){
+  progFilter=f;
+  document.querySelectorAll('#pfAll,#pfNon,#pfSph').forEach(function(b){b.classList.remove('a');});
+  var m={all:'pfAll','Non-SPH':'pfNon','SPH':'pfSph'};
+  if(document.getElementById(m[f]))document.getElementById(m[f]).classList.add('a');
+  renderPrograms();
+}
+
+var VT={total:'Total SPH 2026 vs 2025',campus:'LV vs Other Campuses',vs25:'LV 2026 vs LV 2025',prog:'LV Programs Breakdown'};
+var ST={all:'All Programs',js:'JS Camps',ac:'Academic Prep',sw:'Swimming',lcb:'LCB Malaysia',eq:'Equestrian'};
+function refresh(){var t=view==='prog'?VT[view]+' — '+ST[sub]:VT[view];document.getElementById('ct').textContent=t;document.getElementById('tt').textContent=t;renderChart();renderTable();}
+
+// ── REG MODAL ─────────────────────────────────────
+function openModal(){var s=document.getElementById('iWk');s.innerHTML='<option value="">Choose week…</option>';D.weeks.forEach(function(w,i){s.innerHTML+='<option value="'+i+'">'+w+'</option>';});s.innerHTML+='<option value="new">+ Add new week</option>';document.getElementById('overlay').classList.add('on');}
+function closeModal(){document.getElementById('overlay').classList.remove('on');}
+function prefill(){var idx=parseInt(document.getElementById('iWk').value);if(isNaN(idx))return;function g(a){return a[idx]!=null?a[idx]:'';}document.getElementById('iLV').value=g(D.campuses.LV.data);document.getElementById('iKm').value=g(D.campuses.Kemang.data);document.getElementById('iPl').value=g(D.campuses.Pluit.data);document.getElementById('iSn').value=g(D.campuses.Sentul.data);var jKeys=Object.keys(D.js);var jIds=['iBpk','iBk1','iBk23','iBg12','iBg34','iBg58','iMpk','iMk1','iMk23','iMg12','iMg34','iMg58','iVpk','iVk1','iVk23','iVg12','iVg34','iVg58'];jKeys.forEach(function(k,i){if(jIds[i])document.getElementById(jIds[i]).value=g(D.js[k].data);});document.getElementById('iA78').value=g(D.academic['Acad. Prep Gr7-8 All'].data);document.getElementById('iA910').value=g(D.academic['Acad. Prep Gr9-10 All'].data);document.getElementById('iA1112').value=g(D.academic['Acad. Prep Gr11-12 All'].data);document.getElementById('iSw').value=g(D.swimming['Swimming Camp'].data);document.getElementById('iLcb').value=g(D.lcb['LCB Trip to Malaysia'].data);document.getElementById('iEqg').value=g(D.equestrian['Equestrian Group'].data);document.getElementById('iEqp').value=g(D.equestrian['Equestrian Private'].data);}
+function gv(id){var v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;}
+function saveData(){
+  var ws=document.getElementById('iWk').value,idx;
+  if(ws==='new'){var lbl=document.getElementById('iNwk').value.trim();if(!lbl){alert('Enter a week label');return;}D.weeks.push(lbl);var allArrs=[D.campuses.LV,D.campuses.Kemang,D.campuses.Pluit,D.campuses.Sentul,D.sph26,D.sph25,D.jsT,D.acT,D.swT,D.lcbT,D.eqT].concat(Object.values(D.programs),Object.values(D.js),Object.values(D.academic),Object.values(D.swimming),Object.values(D.lcb),Object.values(D.equestrian));allArrs.forEach(function(o){o.data.push(null);});idx=D.weeks.length-1;}
+  else{idx=parseInt(ws);if(isNaN(idx)){alert('Select a week');return;}}
+  var lv=gv('iLV'),km=gv('iKm'),pl=gv('iPl'),sn=gv('iSn');
+  if(lv!==null)D.campuses.LV.data[idx]=lv;if(km!==null)D.campuses.Kemang.data[idx]=km;if(pl!==null)D.campuses.Pluit.data[idx]=pl;if(sn!==null)D.campuses.Sentul.data[idx]=sn;
+  if([lv,km,pl,sn].every(function(v){return v!==null;}))D.sph26.data[idx]=lv+km+pl+sn;
+  var jKeys=Object.keys(D.js),jIds=['iBpk','iBk1','iBk23','iBg12','iBg34','iBg58','iMpk','iMk1','iMk23','iMg12','iMg34','iMg58','iVpk','iVk1','iVk23','iVg12','iVg34','iVg58'],jsS=0,jsOk=true;
+  jKeys.forEach(function(k,i){var v=gv(jIds[i]);if(v!==null){D.js[k].data[idx]=v;jsS+=v;}else{var c=D.js[k].data[idx];if(c!==null)jsS+=c;else jsOk=false;}});
+  if(jsOk){D.jsT.data[idx]=jsS;D.programs['JS Camps'].data[idx]=jsS;}
+  var a78=gv('iA78'),a910=gv('iA910'),a1112=gv('iA1112');
+  if(a78!==null)D.academic['Acad. Prep Gr7-8 All'].data[idx]=a78;if(a910!==null)D.academic['Acad. Prep Gr9-10 All'].data[idx]=a910;if(a1112!==null)D.academic['Acad. Prep Gr11-12 All'].data[idx]=a1112;
+  if([a78,a910,a1112].every(function(v){return v!==null;})){var s2=a78+a910+a1112;D.acT.data[idx]=s2;D.programs['Academic Prep'].data[idx]=s2;}
+  var sw=gv('iSw');if(sw!==null){D.swimming['Swimming Camp'].data[idx]=sw;D.swT.data[idx]=sw;D.programs['Swimming'].data[idx]=sw;}
+  var lcb=gv('iLcb');if(lcb!==null){D.lcb['LCB Trip to Malaysia'].data[idx]=lcb;D.lcbT.data[idx]=lcb;D.programs['LCB Malaysia'].data[idx]=lcb;}
+  var eqg=gv('iEqg'),eqp=gv('iEqp');if(eqg!==null)D.equestrian['Equestrian Group'].data[idx]=eqg;if(eqp!==null)D.equestrian['Equestrian Private'].data[idx]=eqp;
+  if(eqg!==null&&eqp!==null){var s3=eqg+eqp;D.eqT.data[idx]=s3;D.programs['Equestrian'].data[idx]=s3;}
+  saveD(D);closeModal();updateCards();refresh();pushCloud();
+}
+
+// ── CLOUD SYNC ─────────────────────────────────────
+var BK='sph26_bid',MK='sph26_mkey';
+function getSC(){return{binId:localStorage.getItem(BK)||'',mKey:localStorage.getItem(MK)||''};}
+function isSynced(){var c=getSC();return!!(c.binId&&c.mKey);}
+function openSyncModal(){var c=getSC();document.getElementById('sBinId').value=c.binId;document.getElementById('sMasterKey').value=c.mKey;document.getElementById('syncStatus').style.display='none';updSyncState();document.getElementById('syncOverlay').classList.add('on');}
+function closeSyncModal(){document.getElementById('syncOverlay').classList.remove('on');}
+function updSyncState(){var ok=isSynced();document.getElementById('btnSyncAct').style.display=ok?'none':'inline-flex';document.getElementById('btnDisconn').style.display=ok?'inline-flex':'none';document.getElementById('syncLabel').textContent=ok?'✅ Connected':'Not connected';document.getElementById('btnSync').textContent=ok?'☁ Synced':'☁ Sync';}
+function showSyncSt(msg,bg,color){var el=document.getElementById('syncStatus');el.style.cssText='display:block;background:'+bg+';color:'+color+';border:1px solid '+color+'44;padding:10px 12px;border-radius:8px;font-size:12px';el.textContent=msg;}
+async function doSync(){var binId=document.getElementById('sBinId').value.trim(),mKey=document.getElementById('sMasterKey').value.trim();if(!binId||!mKey){showSyncSt('Enter Bin ID and Master Key','#fee2e2','#b91c1c');return;}var btn=document.getElementById('btnSyncAct');btn.textContent='Connecting…';btn.disabled=true;try{var res=await fetch('https://api.jsonbin.io/v3/b/'+binId,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':mKey},body:JSON.stringify(Object.assign({},D,{schools:SCHOOLS}))});if(!res.ok)throw new Error('HTTP '+res.status);localStorage.setItem(BK,binId);localStorage.setItem(MK,mKey);showSyncSt('✅ Connected & pushed!','#dcfce7','#15803d');updSyncState();}catch(e){showSyncSt('❌ '+e.message,'#fee2e2','#b91c1c');}btn.textContent='Connect & Push';btn.disabled=false;}
+function disconnectSync(){if(!confirm('Disconnect?'))return;[BK,MK].forEach(function(k){localStorage.removeItem(k);});updSyncState();showSyncSt('Disconnected.','#f0f9ff','#0369a1');}
+async function pushCloud(){if(!isSynced())return;var c=getSC();try{await fetch('https://api.jsonbin.io/v3/b/'+c.binId,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':c.mKey},body:JSON.stringify(Object.assign({},D,{schools:SCHOOLS}))});}catch(e){console.warn('Push failed',e);}}
+async function pullCloud(){try{var p=new URLSearchParams(window.location.search),ub=p.get('bin');if(ub){localStorage.setItem(BK,ub);window.history.replaceState({},'',window.location.pathname);}}catch(e){}var binId=localStorage.getItem(BK);if(!binId)return;try{var hdr={'X-Bin-Meta':false},mKey=localStorage.getItem(MK);if(mKey)hdr['X-Master-Key']=mKey;var res=await fetch('https://api.jsonbin.io/v3/b/'+binId+'/latest',{headers:hdr});if(!res.ok)return;var remote=await res.json();if(remote&&remote.weeks&&remote.campuses){if(remote.schools&&remote.schools.length)SCHOOLS.splice(0,SCHOOLS.length,...remote.schools);var sc=remote.schools;delete remote.schools;D=remote;saveD(D);saveSchools();updateCards();refresh();}}catch(e){console.warn('Pull failed',e);}}
+
+function exportCSV(){var hdr=['Program','2025','Target'].concat(D.weeks,['Latest','%']).join(',');function row(lbl,obj){var lv=lastV(obj.data),p=obj.target&&lv?((lv/obj.target)*100).toFixed(1)+'%':'';return'"'+lbl+'",'+[obj.y2025||'',obj.target||''].concat(obj.data.map(function(v){return v!==null?v:'';})).join(',')+','+[lv||'',p].join(',');}var lines=[hdr];Object.entries(D.campuses).forEach(function(e){lines.push(row(e[0],e[1]));});lines.push(row('SPH Total 2026',D.sph26));Object.entries(D.js).forEach(function(e){lines.push(row(e[0],e[1]));});lines.push(row('JS Total',D.jsT));Object.entries(D.academic).forEach(function(e){lines.push(row(e[0],e[1]));});lines.push(row('Acad Total',D.acT));lines.push(row('Swimming',D.swimming['Swimming Camp']));lines.push(row('LCB',D.lcb['LCB Trip to Malaysia']));Object.entries(D.equestrian).forEach(function(e){lines.push(row(e[0],e[1]));});lines.push(row('Equestrian Total',D.eqT));lines.push('');lines.push('SCHOOL ROSTER');lines.push(['Campus','School','Type','Grade','Program'].join(','));SCHOOLS.forEach(function(s){lines.push([s.campus,'"'+s.school+'"',s.type,'"'+(s.grade||'')+'"','"'+(s.program||'')+'"'].join(','));});var blob=new Blob([lines.join('\n')],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='SPH_Camp2026.csv';a.click();}
+
+// ── INIT ─────────────────────────────────────────
+var ts=localStorage.getItem('sph26v6_ts');
+document.getElementById('lbl-ts').textContent=ts?'Updated: '+ts:'Data loaded';
+var sa=document.getElementById('sa');
+sa.style.background=SC2.all;sa.style.color='#fff';sa.style.borderColor='transparent';
+updateCards();setView('total');updSyncState();pullCloud();
+</script>
+</body>
+</html>
